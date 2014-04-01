@@ -46,9 +46,9 @@ crud, service, plugins = Crud(db), Service(), PluginManager()
 
 db.define_table(
     auth.settings.table_user_name,
-    Field('first_name',length='128',default='',requires=[IS_NOT_EMPTY]),
-    Field('last_name',length='128',default='',requires=[IS_NOT_EMPTY]),
-    Field('user_name', requires=[IS_NOT_EMPTY(),IS_ALPHANUMERIC()]),
+    Field('first_name',length='128',default='',requires=[IS_NOT_EMPTY()]),
+    Field('last_name',length='128',default='',requires=[IS_NOT_EMPTY()]),
+    Field('username', requires=[IS_NOT_EMPTY(),IS_ALPHANUMERIC()]),
     Field('email', unique=True,requires=[IS_NOT_EMPTY(),IS_EMAIL()],default="xyz@abc.com"),
     Field('date_of_birth','date',requires=IS_DATE(error_message='must be YYYY-MM-DD!')),
     Field('password','password',readable=False,label='Password',requires=IS_NOT_EMPTY()),
@@ -69,7 +69,7 @@ custom_auth_table.email.requires = [
 IS_EMAIL(error_message=auth.messages.invalid_email),
 IS_NOT_IN_DB(db, custom_auth_table.email)]
 auth.settings.table_user = custom_auth_table
-auth.settings.registration_requires_verification = False
+auth.settings.registration_requires_verification = True
 auth.settings.registration_requires_approval = False
 auth.settings.reset_password_requires_verification = True
 auth.messages.verify_email = 'Click on the link http://' + \
@@ -83,12 +83,14 @@ URL(r=request,c='default',f='user',args=['reset_password']) + \
 
 ## create all tables needed by auth if not custom tables
 auth.define_tables(username=True, signature=False)
+auth_table = auth.settings.table_user
+auth_table.username.requires = IS_NOT_IN_DB(db, auth_table.username)
 
 ## configure email
 mail = auth.settings.mailer
-mail.settings.server = 'logging' or 'smtp.gmail.com:587'
-mail.settings.sender = 'you@gmail.com'
-mail.settings.login = 'username:password'
+mail.settings.server = 'smtp.gmail.com:587' or 'logging' 
+mail.settings.sender = 'registerkbc@gmail.com'
+mail.settings.login = 'registerkbc:registerquiz'
 
 ## configure auth policy
 
@@ -97,6 +99,53 @@ mail.settings.login = 'username:password'
 from gluon.contrib.login_methods.rpx_account import use_janrain
 use_janrain(auth, filename='private/janrain.key')
 
+db.define_table(
+    'general_ques',
+    Field('name',length='512',default='',requires=[IS_NOT_EMPTY()]),
+    Field('opt1',length='512',default='',requires=[IS_NOT_EMPTY()]),
+    Field('opt2',length='512',default='',requires=[IS_NOT_EMPTY()]),
+    Field('opt3',length='512',default='',requires=[IS_NOT_EMPTY()]),
+    Field('opt4',length='512',default='',requires=[IS_NOT_EMPTY()]),
+    Field('ans',length='512',default='',requires=[IS_NOT_EMPTY()])
+    )
+
+db.define_table(
+    'sports',
+    Field('name',length='512',default='',requires=[IS_NOT_EMPTY()]),
+    Field('opt1',length='512',default='',requires=[IS_NOT_EMPTY()]),
+    Field('opt2',length='512',default='',requires=[IS_NOT_EMPTY()]),
+    Field('opt3',length='512',default='',requires=[IS_NOT_EMPTY()]),
+    Field('opt4',length='512',default='',requires=[IS_NOT_EMPTY()]),
+    Field('ans',length='512',default='',requires=[IS_NOT_EMPTY()])
+    )
+db.define_table(
+    'aptitude',
+    Field('name',length='512',default='',requires=[IS_NOT_EMPTY()]),
+    Field('opt1',length='512',default='',requires=[IS_NOT_EMPTY()]),
+    Field('opt2',length='512',default='',requires=[IS_NOT_EMPTY()]),
+    Field('opt3',length='512',default='',requires=[IS_NOT_EMPTY()]),
+    Field('opt4',length='512',default='',requires=[IS_NOT_EMPTY()]),
+    Field('ans',length='512',default='',requires=[IS_NOT_EMPTY()])
+    )
+
+
+#db.define_table('general',Field('question'),Field())
+db.define_table('usage_statistics',
+    Field('time_stamp','datetime', default=request.now),
+    Field('client_ip','string', default=request.client),
+    Field('user_id', 'reference auth_user', default=auth.user and auth.user.id),
+    Field('request_controller','string', default=request.controller),
+    Field('request_function','string', default=request.function),
+    Field('request_extension','string', default=request.extension),
+    Field('request_ajax','string', default=request.ajax),
+    Field('request_args','string', default=request.args),
+    Field('request_vars','string', default=request.vars),
+    Field('request_view','string', default=request.view),
+    Field('request_http_user_agent','string', default=request.env.http_user_agent),
+    Field('request_language','string', default=request.env.http_accept_language),
+    Field('description', 'text'),
+    migrate=False
+    )
 #########################################################################
 ## Define your tables below (or better in another model file) for example
 ##

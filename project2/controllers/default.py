@@ -37,6 +37,17 @@ def user():
         @auth.requires_permission('read','table name',record_id)
     to decorate functions that need access control
     """
+    if 'login' in request.args:
+        db.auth_user.username.label = T("Username or Email")
+        auth.settings.login_userfield = 'username'
+        if request.vars.username and not IS_EMAIL()(request.vars.username)[1]:
+            auth.settings.login_userfield = 'email'
+            request.vars.email = request.vars.username
+            request.post_vars.email = request.vars.email
+            request.vars.username = None
+            request.post_vars.username = None
+            return dict(form=auth())
+        return dict(form=auth())
     return dict(form=auth())
 
 @cache.action()
@@ -75,28 +86,68 @@ def data():
     """
     return dict(form=crud())
 
-def mylogin(): 
-    return dict(form=auth.login())
+def login():
+    redirect(URL('user/login'))
 
-def myregister(): 
-    return dict(form=auth.register())
+def register():
+    redirect(URL('user/register'))
     
 @auth.requires_login()
-def mychangepassword():
-    return dict(form=auth.change_password)
+def changepassword():
+    redirect(URL('user/change_password'))
 
 @auth.requires_login()
-def myprofile(): 
-    return dict(form=auth.profile())
+def profile():
+    redirect(URL('user/profile'))
 
 '''def all_records():
     grid = SQLFORM.grid(db.auth.settings.table_user_name,user_signature=False)
     return locals()'''
 
-def myretrieve():
-    return dict(form=auth.retrieve_password())
+def retrieve():
+    redirect(URL('user/retrieve_password'))
 
 @auth.requires_login()
 def hello():
     return dict(message='hello %(first_name)s %(last_name)s' % auth.user)
 
+def take_ques1():
+    form = SQLFORM(db.general_ques)
+    if form.process(session=None, formname='test').accepted:
+        response.flash = 'form accepted'
+    elif form.errors:
+        response.flash = 'form has errors or passed arguements are invalid'
+    else:
+        response.flash = 'please fill the form'
+    # Note: no form instance is passed to the view
+    return dict()
+
+def take_ques2():
+    form = SQLFORM(db.sports)
+    if form.process(session=None, formname='test').accepted:
+        response.flash = 'form accepted'
+    elif form.errors:
+        response.flash = 'form has errors or passed arguements are invalid'
+    else:
+        response.flash = 'please fill the form'
+    # Note: no form instance is passed to the view
+    return dict()
+
+def take_ques3():
+    form = SQLFORM(db.aptitude)
+    if form.process(session=None, formname='test').accepted:
+        response.flash = 'form accepted'
+    elif form.errors:
+        response.flash = 'form has errors or passed arguements are invalid'
+    else:
+        response.flash = 'please fill the form'
+    # Note: no form instance is passed to the view
+    return dict()
+
+def select():
+    """
+    Display log event into usage_statistics table.
+    """
+    db.usage_statistics.id.readable = False
+    table = SQLFORM.grid(db.usage_statistics, orderby=~db.usage_statistics.time_stamp, ui='jquery-ui', formstyle = 'divs')
+    return dict(table=table)

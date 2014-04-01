@@ -211,3 +211,511 @@ success!
 success!
 success!
 success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+DELETE FROM auth_user;
+DELETE FROM sqlite_sequence WHERE name='auth_user';
+success!
+success!
+DELETE FROM auth_user;
+DELETE FROM sqlite_sequence WHERE name='auth_user';
+success!
+success!
+DELETE FROM auth_user;
+DELETE FROM sqlite_sequence WHERE name='auth_user';
+success!
+success!
+DELETE FROM auth_user;
+DELETE FROM sqlite_sequence WHERE name='auth_user';
+success!
+success!
+DELETE FROM auth_user;
+DELETE FROM sqlite_sequence WHERE name='auth_user';
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+DELETE FROM auth_user;
+DELETE FROM sqlite_sequence WHERE name='auth_user';
+success!
+success!
+DELETE FROM auth_user;
+DELETE FROM sqlite_sequence WHERE name='auth_user';
+success!
+success!
+DELETE FROM auth_user;
+DELETE FROM sqlite_sequence WHERE name='auth_user';
+success!
+success!
+DELETE FROM auth_user;
+DELETE FROM sqlite_sequence WHERE name='auth_user';
+success!
+success!
+DELETE FROM auth_user;
+DELETE FROM sqlite_sequence WHERE name='auth_user';
+success!
+success!
+DELETE FROM auth_user;
+DELETE FROM sqlite_sequence WHERE name='auth_user';
+success!
+success!
+DELETE FROM auth_user;
+DELETE FROM sqlite_sequence WHERE name='auth_user';
+success!
+success!
+DELETE FROM auth_user;
+DELETE FROM sqlite_sequence WHERE name='auth_user';
+success!
+success!
+DELETE FROM auth_user;
+DELETE FROM sqlite_sequence WHERE name='auth_user';
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+timestamp: 2014-03-31T23:12:21.408227
+CREATE TABLE rest(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name CHAR(512)
+);
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+timestamp: 2014-03-31T23:28:09.809400
+CREATE TABLE quest(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name CHAR(512),
+    opt1 CHAR(512),
+    opt2 CHAR(512),
+    opt3 CHAR(512),
+    opt4 CHAR(512),
+    ans CHAR(512)
+);
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+DELETE FROM quest;
+DELETE FROM sqlite_sequence WHERE name='quest';
+success!
+success!
+DELETE FROM quest;
+DELETE FROM sqlite_sequence WHERE name='quest';
+success!
+success!
+DELETE FROM quest;
+DELETE FROM sqlite_sequence WHERE name='quest';
+success!
+success!
+DELETE FROM quest;
+DELETE FROM sqlite_sequence WHERE name='quest';
+success!
+success!
+DELETE FROM quest;
+DELETE FROM sqlite_sequence WHERE name='quest';
+success!
+success!
+DELETE FROM quest;
+DELETE FROM sqlite_sequence WHERE name='quest';
+success!
+success!
+DELETE FROM quest;
+DELETE FROM sqlite_sequence WHERE name='quest';
+success!
+success!
+DELETE FROM quest;
+DELETE FROM sqlite_sequence WHERE name='quest';
+success!
+success!
+DELETE FROM quest;
+DELETE FROM sqlite_sequence WHERE name='quest';
+success!
+success!
+DELETE FROM quest;
+DELETE FROM sqlite_sequence WHERE name='quest';
+success!
+success!
+DELETE FROM quest;
+DELETE FROM sqlite_sequence WHERE name='quest';
+success!
+success!
+DELETE FROM quest;
+DELETE FROM sqlite_sequence WHERE name='quest';
+success!
+success!
+DELETE FROM quest;
+DELETE FROM sqlite_sequence WHERE name='quest';
+success!
+success!
+DELETE FROM quest;
+DELETE FROM sqlite_sequence WHERE name='quest';
+success!
+success!
+DELETE FROM quest;
+DELETE FROM sqlite_sequence WHERE name='quest';
+success!
+success!
+DELETE FROM quest;
+DELETE FROM sqlite_sequence WHERE name='quest';
+success!
+success!
+DELETE FROM quest;
+DELETE FROM sqlite_sequence WHERE name='quest';
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+timestamp: 2014-03-31T23:48:00.713705
+ALTER TABLE quest ADD qname CHAR(512);
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+timestamp: 2014-04-01T17:19:42.813670
+CREATE TABLE usage_statistics(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    time_stamp TIMESTAMP,
+    client_ip CHAR(512),
+    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    request_controller CHAR(512),
+    request_function CHAR(512),
+    request_extension CHAR(512),
+    request_ajax CHAR(512),
+    request_args CHAR(512),
+    request_vars CHAR(512),
+    request_view CHAR(512),
+    request_http_user_agent CHAR(512),
+    request_language CHAR(512),
+    description TEXT
+);
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+timestamp: 2014-04-01T17:45:02.530971
+CREATE TABLE general_ques(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name CHAR(512),
+    opt1 CHAR(512),
+    opt2 CHAR(512),
+    opt3 CHAR(512),
+    opt4 CHAR(512),
+    ans CHAR(512)
+);
+success!
+timestamp: 2014-04-01T17:45:02.651359
+CREATE TABLE sports(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name CHAR(512),
+    opt1 CHAR(512),
+    opt2 CHAR(512),
+    opt3 CHAR(512),
+    opt4 CHAR(512),
+    ans CHAR(512)
+);
+success!
+timestamp: 2014-04-01T17:45:02.729242
+CREATE TABLE aptitude(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name CHAR(512),
+    opt1 CHAR(512),
+    opt2 CHAR(512),
+    opt3 CHAR(512),
+    opt4 CHAR(512),
+    ans CHAR(512)
+);
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
