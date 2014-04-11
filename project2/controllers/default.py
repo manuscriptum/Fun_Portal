@@ -86,6 +86,30 @@ def data():
     """
     return dict(form=crud())
 
+def quiz():
+    if request.vars.category_id:
+        subcategories = db(db.subcategory.category_id==request.vars.category_id).select(db.subcategory.ALL)
+    else:
+        subcategories = db(db.subcategory.category_id==1).select(db.subcategory.ALL)
+        
+    categories = db().select(db.category.ALL)
+
+    if request.vars.subcategory_id:
+        lists = db(db.subcategory.category_id==request.vars.subcategory_id).select(db.subcategory.ALL)
+    else:
+        lists = db(db.subcategory.category_id==1).select(db.subcategory.ALL)
+    return dict(lists=lists, categories=categories, subcategories=subcategories)
+
+def maker():
+    subcategories = db(db.subcategory.category.id==request.vars.category_id).select(db.subcategory.ALL)
+    result = "<select name='subcategory_id'>"
+    for maker in subcategories:
+        result += "<option value='" + str(maker.id) + "'>" + maker.name + "</option>"  
+    result += "</select>"
+    return XML(result)
+
+#def formsubmit():
+
 def login():
     redirect(URL('user/login'))
 
@@ -112,7 +136,8 @@ def hello():
     return dict(message='hello %(first_name)s %(last_name)s' % auth.user)
 
 def take_ques1():
-    form = SQLFORM(db.general_ques)
+    table_name=request.get_vars['name']
+    form = SQLFORM(db,str(table_name))
     if form.process(session=None, formname='test').accepted:
         response.flash = 'form accepted'
     elif form.errors:

@@ -64,7 +64,7 @@ custom_auth_table.first_name.requires = \
 IS_NOT_EMPTY(error_message=auth.messages.is_empty)
 custom_auth_table.last_name.requires = \
 IS_NOT_EMPTY(error_message=auth.messages.is_empty)
-custom_auth_table.password.requires = [IS_STRONG(), CRYPT()]
+custom_auth_table.password.requires = [IS_STRONG(min=5, special=0, upper=0), CRYPT()]
 custom_auth_table.email.requires = [
 IS_EMAIL(error_message=auth.messages.invalid_email),
 IS_NOT_IN_DB(db, custom_auth_table.email)]
@@ -100,36 +100,53 @@ from gluon.contrib.login_methods.rpx_account import use_janrain
 use_janrain(auth, filename='private/janrain.key')
 
 db.define_table(
-    'general_ques',
-    Field('name',length='512',default='',requires=[IS_NOT_EMPTY()]),
-    Field('opt1',length='512',default='',requires=[IS_NOT_EMPTY()]),
-    Field('opt2',length='512',default='',requires=[IS_NOT_EMPTY()]),
-    Field('opt3',length='512',default='',requires=[IS_NOT_EMPTY()]),
-    Field('opt4',length='512',default='',requires=[IS_NOT_EMPTY()]),
-    Field('ans',length='512',default='',requires=[IS_NOT_EMPTY()])
-    )
+    'category',
+    Field('name',length=256,default='',requires=[IS_NOT_EMPTY()]),
+    format='%(name)s'
+)
 
 db.define_table(
-    'sports',
-    Field('name',length='512',default='',requires=[IS_NOT_EMPTY()]),
-    Field('opt1',length='512',default='',requires=[IS_NOT_EMPTY()]),
-    Field('opt2',length='512',default='',requires=[IS_NOT_EMPTY()]),
-    Field('opt3',length='512',default='',requires=[IS_NOT_EMPTY()]),
-    Field('opt4',length='512',default='',requires=[IS_NOT_EMPTY()]),
-    Field('ans',length='512',default='',requires=[IS_NOT_EMPTY()])
+    'subcategory',
+    Field('name',length=256,default='',requires=[IS_NOT_EMPTY()]),
+    Field('category_id',length=256,default=''),
+    format='%(name)s'
     )
+
+db.subcategory.category_id.requires=IS_IN_DB(db,db.category.id,zero=T('choose any one'))
+
 db.define_table(
-    'aptitude',
-    Field('name',length='512',default='',requires=[IS_NOT_EMPTY()]),
-    Field('opt1',length='512',default='',requires=[IS_NOT_EMPTY()]),
-    Field('opt2',length='512',default='',requires=[IS_NOT_EMPTY()]),
-    Field('opt3',length='512',default='',requires=[IS_NOT_EMPTY()]),
-    Field('opt4',length='512',default='',requires=[IS_NOT_EMPTY()]),
-    Field('ans',length='512',default='',requires=[IS_NOT_EMPTY()])
+    'questions',
+    Field('category',default='',requires=[IS_NOT_EMPTY()]),
+    Field('subcategory',default='',requires=[IS_NOT_EMPTY()]),
+    Field('ques',length='512',default='',requires=[IS_NOT_EMPTY()]),
+    Field('option1',length='512',default='',requires=[IS_NOT_EMPTY()]),
+    Field('option2',length='512',default='',requires=[IS_NOT_EMPTY()]),
+    Field('option3',length='512',default='',requires=[IS_NOT_EMPTY()]),
+    Field('option4',length='512',default='',requires=[IS_NOT_EMPTY()]),
+    Field('answer',length='512',default='choose 1,2,3 or 4',requires=[IS_NOT_EMPTY(),IS_IN_SET([1, 2, 3, 4])])
     )
 
+db.questions.category.requires=IS_IN_DB(db,db.category.id,'%(id)s',zero=T('choose one'))
+db.questions.subcategory.requires=IS_IN_DB(db,db.subcategory.id,'%(id)s',zero=T('choose one'))
 
-#db.define_table('general',Field('question'),Field())
+#db.subcategory.truncate()
+
+if db(db.category.id>0).count() == 0:
+    db.category.insert(name='General Knowledge')
+    db.category.insert(name='Current Affairs')
+    db.category.insert(name='Aptitude')
+
+if db(db.subcategory.id>0).count() == 0:
+    db.subcategory.insert(name='Computers & Technology', category_id=1)
+    db.subcategory.insert(name='History', category_id=1)
+    db.subcategory.insert(name='Geography', category_id=1)
+    db.subcategory.insert(name='Literature', category_id=1)
+    db.subcategory.insert(name='Sports', category_id=2)
+    db.subcategory.insert(name='Politics', category_id=2)
+    db.subcategory.insert(name='Science', category_id=3)
+    db.subcategory.insert(name='Mathematics', category_id=3)
+    db.subcategory.insert(name='Others', category_id=3)
+    
 db.define_table('usage_statistics',
     Field('time_stamp','datetime', default=request.now),
     Field('client_ip','string', default=request.client),
