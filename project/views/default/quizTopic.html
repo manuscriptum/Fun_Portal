@@ -1,0 +1,67 @@
+{{extend 'layout.html'}}
+
+{{for row in var:}}
+<input type="radio" onclick="RadioClick(this.value);" name="Category" value="{{=row.id}}"> {{=row.name}} <br><br>
+{{pass}}
+<ol id="subcat">
+</ol>
+{{=A('Start Quiz', _href=URL("quiz", args=[]))}}
+
+<!--<body>
+
+<form action="quizTopic" method="">
+<input type="radio" name="topic" value="Football">Sports<br><br>
+<input type="radio" name="topic" value="International">GK<br><br>
+<input type="submit" name="submit"/>
+</form>
+
+</body>-->
+
+
+<script>
+
+//  allCategories = document.getElementsByName('Category');
+ // var value = false;
+ // for ( var i = 0; i < allCategories.length; i++)
+ // {
+ //     allCategories[i].onclick = function(){
+ 		var val = false;
+        function RadioClick(checkedValue){
+            console.log(checkedValue);
+             val = checkedValue;
+            ajax('{{=URL("cats")}}'+'?val=' + val, [] ,'target');
+         
+         var xmlhttp=new XMLHttpRequest();
+xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {	
+       	jsn = JSON.parse(xmlhttp.responseText);
+       	var length = jsn.len
+       	text = ""
+       	
+       	for ( var j = 1; j <= length; j++)
+       	{
+       	
+    text += "<li>" + '<input type="radio" id = "'+j+'" onclick="RadioClickTwo(this.value);"  name="subcategory" value = "'+j+'" >' + jsn[j] + "</li>"
+
+        }
+        document.getElementById("subcat").innerHTML = text
+      //  console.log(document.getElementById("inp2").value)
+    }
+}
+xmlhttp.open("GET","{{=URL('subcategory')}}",true);
+xmlhttp.send();
+
+
+}
+  var topic = false;
+  function RadioClickTwo(checkedValue){
+  	topic = checkedValue;
+  	ajax('{{=URL("Tempquiz")}}' + '?topic=' + topic,[],'target');
+  }  
+function goToQuiz(){
+  window.location.href = "quiz.html";
+}
+//}
+</script>

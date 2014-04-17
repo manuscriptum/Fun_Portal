@@ -1,0 +1,12 @@
+{{extend 'layout.html' }}
+
+<script language="javascript" type="text/javascript">  
+window.onbeforeunload = function () {
+   window.history.go(0);
+   //location.replace('http://www.google.com');
+   return "This session is expired and the history altered.";
+}
+</script>
+<body >
+<h1>Your response is saved</h1>
+</body>

@@ -1,0 +1,29 @@
+div#memory_board
+	{ 	
+		background:#CCC; 
+		border:#999 1px solid; 
+		width:880px;
+		height:580px; 
+		padding:24px; 
+		margin:20px auto;
+		vertical-align: middle;
+		border-radius:5%;
+	} 
+	div#memory_board > div
+	{ 
+		border:#000 1px solid;
+		display: inline-block;
+		width:88px;
+		height:88px;
+		float:left;
+		margin:8px;
+		padding:20px;
+		font-size:15px;
+		border-radius:50%;
+		cursor:pointer;
+		text-align:center;
+		{{backimage = URL('static','images/country.jpg')}}
+		background: url('{{=backimage}}') no-repeat;
+		background-size: 100%; 
+	} 
+	

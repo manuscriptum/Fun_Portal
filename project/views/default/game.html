@@ -1,0 +1,31 @@
+{{include 'layout.html'}}
+<head>
+	<title>
+		Games
+	</title>
+	<script>
+	{{response.files.append(URL(r=request,c='static',f='css/game.css'))}}
+	{{include 'web2py_ajax.html'}}
+	</script>
+</head>
+<body>
+	<h1>Presenting To You The Games:</h1>
+	<br>
+	<ul>
+		<li> 
+			<h2>Dodge Ball Game</h2>
+			<br>
+		<a href="dodgeball.html">
+		<img src={{=URL('static','images/dodgeball.png')}} alt="Dodge The Ball Game">
+		</a>
+		</li>
+		<br>
+		<li> 
+			<h2>Memory Game </h2>
+			<br>
+		<a href="memorygame.html">
+		<img src={{=URL('static','images/memorygame.png')}} alt="Memory Game">
+		</a>
+		</li>
+	</ul>
+</body>
