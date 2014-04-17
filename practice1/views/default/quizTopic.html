@@ -1,0 +1,28 @@
+{{extend 'layout.html'}}
+<body>
+
+<form action="quizTopic" method="">
+<input type="radio" name="topic" value="Football">Sports<br><br>
+<input type="radio" name="topic" value="International">GK<br><br>  
+<input type="submit" name="submit"/>
+</form>
+
+</body>
+<!--
+<script>
+function SaveTopic() {
+  options = document.getElementsByName('topic');
+  var top = false;
+  for ( var i = 0; i < options.length; i++)
+  {
+    if (options[i].checked)
+    {
+      top = options[i].value;
+    }
+
+  }
+  console.log(top)
+  ajax('Topic?top=' + top,[],'target');
+}
+</script>
+-->

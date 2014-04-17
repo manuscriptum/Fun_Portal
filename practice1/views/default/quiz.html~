@@ -1,0 +1,131 @@
+{{extend 'layout.html'}}
+{{=BEAUTIFY(session.topic)}} 
+
+{{for row in var:}}
+<span id="SerialNum">{{=row.Serial}}</span> <span id="Question">
+{{=row.question}}
+</span><br><br>
+<input type="radio" name="option" value="opt1" /> <span id="Opt1"> {{=row.opt1}}
+</span>
+<br><br>
+<input type="radio" name="option" value="opt2" id="option2" /> <span id="Opt2"> {{=row.opt2}}
+</span>
+<br><br>
+<button id="prev" name="button" value="prev" onclick="Prev();">Previous</button>
+<button id="submit" name="submit" onclick="Save();">Save</button>
+<button id="submit" name="button" onclick="Next();">Next</button>
+{{pass}}
+<br>
+
+<script type="text/javascript">
+
+//SerialNumber = getElementById('SerialNum').innerHTML;
+
+function Save() {
+  options = document.getElementsByName('option');
+  var value = false;
+  for ( var i = 0; i < options.length; i++)
+  {
+    if (options[i].checked)
+    {
+      value = options[i].value;
+    }
+  }
+  var SerialNumber = document.getElementById('SerialNum').innerHTML
+  console.log(SerialNumber)
+  ajax('tempSave?SerialNumber=' + SerialNumber,[],'target');
+  ajax('selectedOption?value=' + value,[],'target');
+  }
+
+function Next() {
+  
+var xmlhttp=new XMLHttpRequest();
+xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {	
+       	jsn = JSON.parse(xmlhttp.responseText);
+        SerialNumber = jsn.serial;
+      document.getElementById("SerialNum").innerHTML=jsn.serial;
+    	document.getElementById("Question").innerHTML=jsn.question;
+    	document.getElementById("Opt1").innerHTML=jsn.opt1;
+    	document.getElementById("Opt2").innerHTML=jsn.opt2;
+      var SerialNumber = document.getElementById('SerialNum').innerHTML
+      console.log(SerialNumber)
+      ajax('tempSave?SerialNumber=' + SerialNumber,[],'target');  
+
+    }
+}
+xmlhttp.open("GET","nextQuestion",true);
+xmlhttp.send();
+//ajax('nextQuestion?SerialNumber=' + SerialNumber,[],'target');
+}
+
+
+
+function Prev() {
+
+var xmlhttp=new XMLHttpRequest();
+xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {	
+       	jsn = JSON.parse(xmlhttp.responseText);
+      SerialNumber = jsn.serial;  
+      document.getElementById("SerialNum").innerHTML=jsn.serial;
+    	document.getElementById("Question").innerHTML=jsn.question;
+    	document.getElementById("Opt1").innerHTML=jsn.opt1;
+    	document.getElementById("Opt2").innerHTML=jsn.opt2;
+      var SerialNumber = document.getElementById('SerialNum').innerHTML
+      console.log(SerialNumber)
+      ajax('tempSave?SerialNumber=' + SerialNumber,[],'target');
+    }
+}
+xmlhttp.open("GET","prevQuestion",true);
+xmlhttp.send();
+}
+
+</script>
+
+
+<div id="txt"></div>
+<button onclick="stopCount()">Pause countdown!</button>
+
+
+<script>
+function startCount()
+{
+if (!timer_is_on)
+  {
+  timer_is_on=1;
+  timedCount();
+  }
+}
+var c = 10;
+var t;
+var timer_is_on = 0;
+
+function timedCount()
+{
+document.getElementById("txt").innerHTML=c;
+c = c-1;
+if(c!=-1)
+{
+t = setTimeout(function(){timedCount()},1000);
+}
+else
+{
+window.location.href="quizOver.html"
+}
+}
+function stopCount()
+{
+clearTimeout(t);
+timer_is_on=0;
+alert("Click OK to continue");
+startCount();
+}
+startCount();
+
+</script>
+
