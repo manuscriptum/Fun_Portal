@@ -111,7 +111,9 @@
 				    	// Check to see if the whole board is cleared 
 				    	if(tiles_flipped == mem_arr.length)
 				    	{ 
-				    		var continuos=confirm("Do you want to play another game?");
+				    		score=count;
+				    		
+				    		var continuos=confirm("Do you want to play another game? Your score is "+ score + "seconds");
 				    		if (continuos==true)
 				    		{
 				    			document.getElementById('memory_board').innerHTML = ""; 

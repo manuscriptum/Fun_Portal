@@ -110,19 +110,11 @@ def retrieve():
     redirect(URL('user/retrieve_password'))
 
 def memorygame():
-  if auth.user:
-    hs=auth.user.memorygame_high_score;
-  else:
-    hs=0;
-  return dict(hs=hs);
+  return dict();
 
 def dodgeball():
-  if auth.user:
-      hs=auth.user.dodgeball_high_score;
-  else:
-    hs=0; 
-  return dict(hs=hs);
-
+  return dict();
+  
 def subcategory():
    var = db(db.subcategory.category_id == session.cat).select()
    d = {}
@@ -130,7 +122,7 @@ def subcategory():
    for i in var:
      d[count] = i.name
   #   d["serial"] = i.Serial
-     count += 1
+     count += 100
    d["len"] = count - 1
    print d
    import json
@@ -235,6 +227,7 @@ def prevFlash():
        session.flash = "You had selected " + session.ansDict[numb]
    except:
        session.flash = "Select an option"
+
 
 def prevQuestion():
    if session.counter == session.first:
