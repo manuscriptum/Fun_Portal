@@ -1,0 +1,788 @@
+(dp1
+S'output'
+p2
+S"<type 'exceptions.NameError'> name 'string' is not defined"
+p3
+sS'layer'
+p4
+S'/home/dell/Downloads/web2py/applications/quiztopher/models/db.py'
+p5
+sS'code'
+p6
+S'# -*- coding: utf-8 -*-\n\n#########################################################################\n## This scaffolding model makes your app work on Google App Engine too\n## File is released under public domain and you can use without limitations\n#########################################################################\n\n## if SSL/HTTPS is properly configured and you want all HTTP requests to\n## be redirected to HTTPS, uncomment the line below:\n# request.requires_https()\n\nif not request.env.web2py_runtime_gae:\n    ## if NOT running on Google App Engine use SQLite or other DB\n    db = DAL(\'sqlite://storage.sqlite\',pool_size=1,check_reserved=[\'all\'])\nelse:\n    ## connect to Google BigTable (optional \'google:datastore://namespace\')\n    db = DAL(\'google:datastore\')\n    ## store sessions and tickets there\n    session.connect(request, response, db=db)\n    ## or store session in Memcache, Redis, etc.\n    ## from gluon.contrib.memdb import MEMDB\n    ## from google.appengine.api.memcache import Client\n    ## session.connect(request, response, db = MEMDB(Client()))\n\n## by default give a view/generic.extension to all actions from localhost\n## none otherwise. a pattern can be \'controller/function.extension\'\nresponse.generic_patterns = [\'*\'] if request.is_local else []\n## (optional) optimize handling of static files\n# response.optimize_css = \'concat,minify,inline\'\n# response.optimize_js = \'concat,minify,inline\'\n## (optional) static assets folder versioning\n# response.static_version = \'0.0.0\'\n#########################################################################\n## Here is sample code if you need for\n## - email capabilities\n## - authentication (registration, login, logout, ... )\n## - authorization (role based authorization)\n## - services (xml, csv, json, xmlrpc, jsonrpc, amf, rss)\n## - old style crud actions\n## (more options discussed in gluon/tools.py)\n#########################################################################\n\nfrom gluon.tools import Auth, Crud, Service, PluginManager, prettydate\nauth = Auth(db)\ncrud, service, plugins = Crud(db), Service(), PluginManager()\n\ndb.define_table(\n    auth.settings.table_user_name,\n    Field(\'first_name\',length=\'128\',default=\'\',requires=[IS_NOT_EMPTY()]),\n    Field(\'last_name\',length=\'128\',default=\'\',requires=[IS_NOT_EMPTY()]),\n    Field(\'username\', requires=[IS_NOT_EMPTY(),IS_ALPHANUMERIC()]),\n    Field(\'email\', unique=True,requires=[IS_NOT_EMPTY(),IS_EMAIL()],default="xyz@abc.com"),\n    Field(\'date_of_birth\',\'date\',requires=IS_DATE(error_message=\'must be YYYY-MM-DD!\')),\n    Field(\'password\',\'password\',readable=False,label=\'Password\',requires=IS_NOT_EMPTY()),\n    Field(\'image\',\'upload\',readable=False,requires=[IS_IMAGE(error_message="Please upload a valid image"),IS_NOT_EMPTY()]),\n    Field(\'gender\',default=\'Male\',requires=IS_IN_SET([\'Male\',\'Female\'])),\n    Field(\'registration_key\', length=512, writable=False, readable=False, default=\'\'),\n    Field(\'reset_password_key\', length=512, writable=False, readable=False, default=\'\'),\n    Field(\'registration_id\', length=512, writable=False, readable=False, default=\'\'),\n    Field(\'dodgeball_high_score\', writable=False, readable=False, default=\'0\'),\n    Field(\'memorygame_high_score\', writable=False, readable=False, default=\'0\')\n    )\n\ncustom_auth_table = db[auth.settings.table_user_name] # get the custom_auth_table\ncustom_auth_table.first_name.requires = \\\nIS_NOT_EMPTY(error_message=auth.messages.is_empty)\ncustom_auth_table.last_name.requires = \\\nIS_NOT_EMPTY(error_message=auth.messages.is_empty)\ncustom_auth_table.password.requires = [IS_STRONG(), CRYPT()]\ncustom_auth_table.email.requires = [\nIS_EMAIL(error_message=auth.messages.invalid_email),\nIS_NOT_IN_DB(db, custom_auth_table.email)]\nauth.settings.table_user = custom_auth_table\nauth.settings.registration_requires_verification = True\nauth.settings.registration_requires_approval = False\nauth.settings.reset_password_requires_verification = True\nauth.messages.verify_email = \'Click on the link http://\' + \\\nrequest.env.http_host + \\\nURL(r=request,c=\'default\',f=\'user\',args=[\'verify_email\']) + \\\n\'/%(key)s to verify your email\'\nauth.messages.reset_password = \'Click on the link http://\' + \\\nrequest.env.http_host + \\\nURL(r=request,c=\'default\',f=\'user\',args=[\'reset_password\']) + \\\n\'/%(key)s to reset your password\'\n\nauth.define_tables(username=True, signature=False)\nauth_table = auth.settings.table_user\nauth_table.username.requires = IS_NOT_IN_DB(db, auth_table.username)\n\n## configure email\nmail = auth.settings.mailer\nmail.settings.server = \'smtp.gmail.com:587\' or \'logging\' \nmail.settings.sender = \'registerkbc@gmail.com\'\nmail.settings.login = \'registerkbc:registerquiz\'\n\n\n## configure auth policy\nauth.settings.registration_requires_verification = True\nauth.settings.registration_requires_approval = False\nauth.settings.reset_password_requires_verification = True\n\n## if you need to use OpenID, Facebook, MySpace, Twitter, Linkedin, etc.\n## register with janrain.com, write your domain:api_key in private/janrain.key\nfrom gluon.contrib.login_methods.rpx_account import use_janrain\nuse_janrain(auth, filename=\'private/janrain.key\')\n\ndb.define_table(\n    \'category\',\n    Field(\'name\',length=256,default=\'\',requires=[IS_NOT_EMPTY()]),\n    format=\'%(name)s\'\n)\n\ndb.define_table(\n    \'subcategory\',\n    Field(\'name\',length=256,default=\'\',requires=[IS_NOT_EMPTY()]),\n    Field(\'category_id\',length=256,default=\'\'),\n    Field(\'Serial\',\'integer\'),\n    format=\'%(name)s\'\n    )\n\ndb.subcategory.category_id.requires=IS_IN_DB(db,db.category.id,zero=T(\'choose any one\'))\n\ndb.define_table(\n    \'questions\',\n #   Field(\'category\',default=\'\',requires=[IS_NOT_EMPTY()]),\n    Field(\'subcategory\',\'string\'),\n    Field(\'RollNo\',\'integer\'),\n    Field(\'question\',length=\'512\',default=\'\',requires=[IS_NOT_EMPTY()]),\n    Field(\'opt1\',length=\'512\',default=\'\',requires=[IS_NOT_EMPTY()]),\n    Field(\'opt2\',length=\'512\',default=\'\',requires=[IS_NOT_EMPTY()]),\n    Field(\'opt3\',length=\'512\',default=\'\',requires=[IS_NOT_EMPTY()]),\n    Field(\'opt4\',length=\'512\',default=\'\',requires=[IS_NOT_EMPTY()]),\n    Field(\'answer\',string)\n    )\n\n#db.questions.category.requires=IS_IN_DB(db,db.category.id,\'%(id)s\',zero=T(\'choose one\'))\n#db.questions.subcategory.requires=IS_IN_DB(db,db.subcategory.id,\'%(id)s\',zero=T(\'choose one\'))\n\n#db.subcategory.truncate()\n\nif db(db.category.id>0).count() == 0:\n    db.category.insert(name=\'General Knowledge\')\n    db.category.insert(name=\'Current Affairs\')\n    db.category.insert(name=\'Aptitude\')\n\nif db(db.subcategory.id>0).count() == 0:\n    db.subcategory.insert(name=\'Computers & Technology\', category_id=1,Serial=1)\n    db.subcategory.insert(name=\'History\', category_id=1,Serial=2)\n    db.subcategory.insert(name=\'Geography\', category_id=1,Serial=3)\n    db.subcategory.insert(name=\'Literature\', category_id=1,Serial=4)\n    db.subcategory.insert(name=\'Sports\', category_id=2,Serial=1)\n    db.subcategory.insert(name=\'Politics\', category_id=2,Serial=2)\n    db.subcategory.insert(name=\'Science\', category_id=3,Serial=1)\n    db.subcategory.insert(name=\'Mathematics\', category_id=3,Serial=2)\n    db.subcategory.insert(name=\'Others\', category_id=3,Serial=3)\n    \ndb.define_table(\'usage_statistics\',\n    Field(\'time_stamp\',\'datetime\', default=request.now),\n    Field(\'client_ip\',\'string\', default=request.client),\n    Field(\'user_id\', \'reference auth_user\', default=auth.user and auth.user.id),\n    Field(\'request_controller\',\'string\', default=request.controller),\n    Field(\'request_function\',\'string\', default=request.function),\n    Field(\'request_extension\',\'string\', default=request.extension),\n    Field(\'request_ajax\',\'string\', default=request.ajax),\n    Field(\'request_args\',\'string\', default=request.args),\n    Field(\'request_vars\',\'string\', default=request.vars),\n    Field(\'request_view\',\'string\', default=request.view),\n    Field(\'request_http_user_agent\',\'string\', default=request.env.http_user_agent),\n    Field(\'request_language\',\'string\', default=request.env.http_accept_language),\n    Field(\'description\', \'text\'),\n    migrate=False\n    )\n\n\n#########################################################################\n## Define your tables below (or better in another model file) for example\n##\n## >>> db.define_table(\'mytable\',Field(\'myfield\',\'string\'))\n    \ndb.define_table(\'Computers\',\n               Field(\'Serial\',\'integer\'),\n               Field(\'question\',\'string\'),\n               Field(\'opt1\',\'string\'),\n               Field(\'opt2\',\'string\'),\n               Field(\'opt3\',\'string\'),\n               Field(\'opt4\',\'string\'),\n               Field(\'correctAns\',\'string\')\n               )\n\ndb.define_table(\'History\',\n               Field(\'Serial\',\'integer\'),\n               Field(\'question\',\'string\'),\n               Field(\'opt1\',\'string\'),\n               Field(\'opt2\',\'string\'),\n               Field(\'opt3\',\'string\'),\n               Field(\'opt4\',\'string\'),\n               Field(\'correctAns\',\'string\')\n               )\n\ndb.define_table(\'Geography\',\n               Field(\'Serial\',\'integer\'),\n               Field(\'question\',\'string\'),\n               Field(\'opt1\',\'string\'),\n               Field(\'opt2\',\'string\'),\n               Field(\'opt3\',\'string\'),\n               Field(\'opt4\',\'string\'),\n               Field(\'correctAns\',\'string\')\n               )\n\n\ndb.define_table(\'Literature\',\n               Field(\'Serial\',\'integer\'),\n               Field(\'question\',\'string\'),\n               Field(\'opt1\',\'string\'),\n               Field(\'opt2\',\'string\'),\n               Field(\'opt3\',\'string\'),\n               Field(\'opt4\',\'string\'),\n               Field(\'correctAns\',\'string\')\n               )\n\ndb.define_table(\'Sports\',\n               Field(\'Serial\',\'integer\'),\n               Field(\'question\',\'string\'),\n               Field(\'opt1\',\'string\'),\n               Field(\'opt2\',\'string\'),\n               Field(\'opt3\',\'string\'),\n               Field(\'opt4\',\'string\'),\n               Field(\'correctAns\',\'string\')\n               )\n\ndb.define_table(\'Politics\',\n               Field(\'Serial\',\'integer\'),\n               Field(\'question\',\'string\'),\n               Field(\'opt1\',\'string\'),\n               Field(\'opt2\',\'string\'),\n               Field(\'opt3\',\'string\'),\n               Field(\'opt4\',\'string\'),\n               Field(\'correctAns\',\'string\')\n               )\n\ndb.define_table(\'Science\',\n               Field(\'Serial\',\'integer\'),\n               Field(\'question\',\'string\'),\n               Field(\'opt1\',\'string\'),\n               Field(\'opt2\',\'string\'),\n               Field(\'opt3\',\'string\'),\n               Field(\'opt4\',\'string\'),\n               Field(\'correctAns\',\'string\')\n               )\n\ndb.define_table(\'Mathematics\',\n               Field(\'Serial\',\'integer\'),\n               Field(\'question\',\'string\'),\n               Field(\'opt1\',\'string\'),\n               Field(\'opt2\',\'string\'),\n               Field(\'opt3\',\'string\'),\n               Field(\'opt4\',\'string\'),\n               Field(\'correctAns\',\'string\')\n               )\n\ndb.define_table(\'OtherTopics\',\n               Field(\'Serial\',\'integer\'),\n               Field(\'question\',\'string\'),\n               Field(\'opt1\',\'string\'),\n               Field(\'opt2\',\'string\'),\n               Field(\'opt3\',\'string\'),\n               Field(\'opt4\',\'string\'),\n               Field(\'correctAns\',\'string\')\n               )\n\n\n#db.define_table(\'payer\',\n#       Field(\'name\',\'string\'),\n#        Field(\'married\',\'boolean\'),\n#        Field(\'spouse_name\',\'string\')\n#        )\n##\n## Fields can be \'string\',\'text\',\'password\',\'integer\',\'double\',\'boolean\'\n##       \'date\',\'time\',\'datetime\',\'blob\',\'upload\', \'reference TABLENAME\'\n## There is an implicit \'id integer autoincrement\' field\n## Consult manual for more options, validators, etc.\n##\n## More API examples for controllers:\n##\n## >>> db.mytable.insert(myfield=\'value\')\n## >>> rows=db(db.mytable.myfield==\'value\').select(db.mytable.ALL)\n## >>> for row in rows: print row.id, row.myfield\n#########################################################################\n\n## after defining tables, uncomment below to enable auditing\n# auth.enable_record_versioning(db)\n'
+p7
+sS'snapshot'
+p8
+(dp9
+S'exception'
+p10
+(dp11
+S'__hash__'
+p12
+S"<method-wrapper '__hash__' of exceptions.NameError object>"
+p13
+sS'__setattr__'
+p14
+S"<method-wrapper '__setattr__' of exceptions.NameError object>"
+p15
+sS'__reduce_ex__'
+p16
+S'<built-in method __reduce_ex__ of exceptions.NameError object>'
+p17
+sS'__getslice__'
+p18
+S"<method-wrapper '__getslice__' of exceptions.NameError object>"
+p19
+sS'__getitem__'
+p20
+S"<method-wrapper '__getitem__' of exceptions.NameError object>"
+p21
+sS'__setstate__'
+p22
+S'<built-in method __setstate__ of exceptions.NameError object>'
+p23
+sS'args'
+p24
+S'("name \'string\' is not defined",)'
+p25
+sS'__reduce__'
+p26
+S'<built-in method __reduce__ of exceptions.NameError object>'
+p27
+sS'__str__'
+p28
+S"<method-wrapper '__str__' of exceptions.NameError object>"
+p29
+sS'__format__'
+p30
+S'<built-in method __format__ of exceptions.NameError object>'
+p31
+sS'__getattribute__'
+p32
+S"<method-wrapper '__getattribute__' of exceptions.NameError object>"
+p33
+sS'__class__'
+p34
+S"<type 'exceptions.NameError'>"
+p35
+sS'__unicode__'
+p36
+S'<built-in method __unicode__ of exceptions.NameError object>'
+p37
+sS'__delattr__'
+p38
+S"<method-wrapper '__delattr__' of exceptions.NameError object>"
+p39
+sS'__subclasshook__'
+p40
+S'<built-in method __subclasshook__ of type object>'
+p41
+sS'__repr__'
+p42
+S"<method-wrapper '__repr__' of exceptions.NameError object>"
+p43
+sS'__dict__'
+p44
+S'{}'
+p45
+sS'__sizeof__'
+p46
+S'<built-in method __sizeof__ of exceptions.NameError object>'
+p47
+sS'__doc__'
+p48
+S"'Name not found globally.'"
+p49
+sS'__init__'
+p50
+S"<method-wrapper '__init__' of exceptions.NameError object>"
+p51
+sS'__new__'
+p52
+S'<built-in method __new__ of type object>'
+p53
+ssS'evalue'
+p54
+S"name 'string' is not defined"
+p55
+sS'request'
+p56
+cgluon.html
+XML_unpickle
+p57
+(S's\xb0Z\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top;">ajax</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">application</td><td style="vertical-align:top;">:</td><td><div>quiztopher</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">args</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>db</div></td></tr><tr><td><div>questions</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cid</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">client</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">controller</td><td style="vertical-align:top;">:</td><td><div>appadmin</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cookies</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">session_id_admin</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-8fd521a5-0f75-4128-821f-1be31845591f<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id_quiztopher</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-9cbc7951-331b-4981-903c-8adbfa6a3db5<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">env</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">CONTENT_LENGTH</td><td style="vertical-align:top;">:</td><td><div>1276</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">CONTENT_TYPE</td><td style="vertical-align:top;">:</td><td><div>multipart/form-data; boundary=---------------------------9239770901920066651636950325</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_ACCEPT</td><td style="vertical-align:top;">:</td><td><div>text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_ACCEPT_ENCODING</td><td style="vertical-align:top;">:</td><td><div>gzip, deflate</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_ACCEPT_LANGUAGE</td><td style="vertical-align:top;">:</td><td><div>en-US,en;q=0.5</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_CONNECTION</td><td style="vertical-align:top;">:</td><td><div>keep-alive</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_CONTENT_LENGTH</td><td style="vertical-align:top;">:</td><td><div>1276</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_CONTENT_TYPE</td><td style="vertical-align:top;">:</td><td><div>multipart/form-data; boundary=---------------------------9239770901920066651636950325</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_COOKIE</td><td style="vertical-align:top;">:</td><td><div>session_id_quiztopher=127.0.0.1-9cbc7951-331b-4981-903c-8adbfa6a3db5; session_id_admin=127.0.0.1-8fd521a5-0f75-4128-821f-1be31845591f</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_HOST</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1:8000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_REFERER</td><td style="vertical-align:top;">:</td><td><div>http://127.0.0.1:8000/quiztopher/appadmin/insert/db/questions</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_USER_AGENT</td><td style="vertical-align:top;">:</td><td><div>Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:26.0) Gecko/20100101 Firefox/26.0</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">PATH_INFO</td><td style="vertical-align:top;">:</td><td><div>/quiztopher/appadmin/insert/db/questions</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">QUERY_STRING</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">REMOTE_ADDR</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">REMOTE_PORT</td><td style="vertical-align:top;">:</td><td><div>40132</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">REQUEST_METHOD</td><td style="vertical-align:top;">:</td><td><div>POST</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">SCRIPT_NAME</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">SERVER_NAME</td><td style="vertical-align:top;">:</td><td><div>ubuntu</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">SERVER_PORT</td><td style="vertical-align:top;">:</td><td><div>8000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">SERVER_PROTOCOL</td><td style="vertical-align:top;">:</td><td><div>HTTP/1.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">SERVER_SOFTWARE</td><td style="vertical-align:top;">:</td><td><div>Rocket 1.2.6</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">app_folders</td><td style="vertical-align:top;">:</td><td><div>set([&#x27;/home/dell/Downloads/web2py/applications/admin/&#x27;, &#x27;/home/dell/Downloads/web2py/applications/quiztopher/&#x27;])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">applications_parent</td><td style="vertical-align:top;">:</td><td><div>/home/dell/Downloads/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cmd_args</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cmd_options</td><td style="vertical-align:top;">:</td><td><div>&lt;Values at 0x25111b8: {&#x27;verbose&#x27;: False, &#x27;ip&#x27;: &#x27;127.0.0.1&#x27;, &#x27;debuglevel&#x27;: 30, &#x27;with_scheduler&#x27;: False, &#x27;ips&#x27;: [&#x27;127.0.1.1&#x27;], &#x27;shutdown_timeout&#x27;: 5, &#x27;taskbar&#x27;: False, &#x27;with_coverage&#x27;: False, &#x27;port&#x27;: 8000, &#x27;maxthreads&#x27;: None, &#x27;softcron&#x27;: False, &#x27;server_name&#x27;: &#x27;ubuntu&#x27;, &#x27;bpython&#x27;: False, &#x27;nogui&#x27;: True, &#x27;pid_filename&#x27;: &#x27;httpserver.pid&#x27;, &#x27;extcron&#x27;: False, &#x27;runcron&#x27;: False, &#x27;run_system_tests&#x27;: False, &#x27;test&#x27;: None, &#x27;folder&#x27;: &#x27;/home/dell/Downloads/web2py&#x27;, &#x27;config&#x27;: &#x27;&#x27;, &#x27;minthreads&#x27;: None, &#x27;shell&#x27;: None, &#x27;run&#x27;: &#x27;&#x27;, &#x27;log_filename&#x27;: &#x27;httpserver.log&#x27;, &#x27;profiler_dir&#x27;: None, &#x27;args&#x27;: [&#x27;&#x27;], &#x27;socket_timeout&#x27;: 5, &#x27;ssl_ca_certificate&#x27;: None, &#x27;scheduler&#x27;: None, &#x27;interfaces&#x27;: None, &#x27;ssl_private_key&#x27;: &#x27;&#x27;, &#x27;scheduler_groups&#x27;: None, &#x27;password&#x27;: &#x27;1234&#x27;, &#x27;request_queue_size&#x27;: 5, &#x27;ssl_certificate&#x27;: &#x27;&#x27;, &#x27;cronjob&#x27;: False, &#x27;numthreads&#x27;: None, &#x27;quiet&#x27;: False, &#x27;import_models&#x27;: False, &#x27;timeout&#x27;: 10, &#x27;plain&#x27;: False, &#x27;nobanner&#x27;: False}&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">content_length</td><td style="vertical-align:top;">:</td><td><div>1276</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">content_type</td><td style="vertical-align:top;">:</td><td><div>multipart/form-data; boundary=---------------------------9239770901920066651636950325</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">db_sessions</td><td style="vertical-align:top;">:</td><td><div>set([])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">debugging</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">gluon_parent</td><td style="vertical-align:top;">:</td><td><div>/home/dell/Downloads/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_accept</td><td style="vertical-align:top;">:</td><td><div>text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_accept_encoding</td><td style="vertical-align:top;">:</td><td><div>gzip, deflate</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_accept_language</td><td style="vertical-align:top;">:</td><td><div>en-US,en;q=0.5</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_connection</td><td style="vertical-align:top;">:</td><td><div>keep-alive</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_content_length</td><td style="vertical-align:top;">:</td><td><div>1276</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_content_type</td><td style="vertical-align:top;">:</td><td><div>multipart/form-data; boundary=---------------------------9239770901920066651636950325</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_cookie</td><td style="vertical-align:top;">:</td><td><div>session_id_quiztopher=127.0.0.1-9cbc7951-331b-4981-903c-8adbfa6a3db5; session_id_admin=127.0.0.1-8fd521a5-0f75-4128-821f-1be31845591f</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_host</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1:8000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_referer</td><td style="vertical-align:top;">:</td><td><div>http://127.0.0.1:8000/quiztopher/appadmin/insert/db/questions</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_user_agent</td><td style="vertical-align:top;">:</td><td><div>Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:26.0) Gecko/20100101 Firefox/26.0</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_jython</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_pypy</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_source</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">local_hosts</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>ubuntu.ubuntu-domain</div></td></tr><tr><td><div>::ffff:127.0.0.1</div></td></tr><tr><td><div>::1</div></td></tr><tr><td><div>ubuntu</div></td></tr><tr><td><div>127.0.1.1</div></td></tr><tr><td><div>127.0.0.1</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path_info</td><td style="vertical-align:top;">:</td><td><div>/quiztopher/appadmin/insert/db/questions</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">query_string</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">remote_addr</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">remote_port</td><td style="vertical-align:top;">:</td><td><div>40132</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">request_method</td><td style="vertical-align:top;">:</td><td><div>POST</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">request_uri</td><td style="vertical-align:top;">:</td><td><div>/quiztopher/appadmin/insert/db/questions</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">script_name</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">server_name</td><td style="vertical-align:top;">:</td><td><div>ubuntu</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">server_port</td><td style="vertical-align:top;">:</td><td><div>8000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">server_protocol</td><td style="vertical-align:top;">:</td><td><div>HTTP/1.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">server_software</td><td style="vertical-align:top;">:</td><td><div>Rocket 1.2.6</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">web2py_path</td><td style="vertical-align:top;">:</td><td><div>/home/dell/Downloads/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">web2py_version</td><td style="vertical-align:top;">:</td><td><div>2.9.4-stable+timestamp.2014.03.05.04.44.09</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.errors</td><td style="vertical-align:top;">:</td><td><div>&lt;open file &#x27;&lt;stderr&gt;&#x27;, mode &#x27;w&#x27; at 0x7f3ed4afe1e0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.file_wrapper</td><td style="vertical-align:top;">:</td><td><div>&lt;class wsgiref.util.FileWrapper at 0x24a5598&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.input</td><td style="vertical-align:top;">:</td><td><div>&lt;socket._fileobject object at 0x7f3eac02fe50&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.multiprocess</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.multithread</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.run_once</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.url_scheme</td><td style="vertical-align:top;">:</td><td><div>http</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.version</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>1</div></td></tr><tr><td><div>0</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_errors</td><td style="vertical-align:top;">:</td><td><div>&lt;open file &#x27;&lt;stderr&gt;&#x27;, mode &#x27;w&#x27; at 0x7f3ed4afe1e0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_file_wrapper</td><td style="vertical-align:top;">:</td><td><div>&lt;class wsgiref.util.FileWrapper at 0x24a5598&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_input</td><td style="vertical-align:top;">:</td><td><div>&lt;socket._fileobject object at 0x7f3eac02fe50&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_multiprocess</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_multithread</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_run_once</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_url_scheme</td><td style="vertical-align:top;">:</td><td><div>http</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_version</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>1</div></td></tr><tr><td><div>0</div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">extension</td><td style="vertical-align:top;">:</td><td><div>html</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">folder</td><td style="vertical-align:top;">:</td><td><div>/home/dell/Downloads/web2py/applications/quiztopher/</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">function</td><td style="vertical-align:top;">:</td><td><div>insert</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">global_settings</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">app_folders</td><td style="vertical-align:top;">:</td><td><div>set([&#x27;/home/dell/Downloads/web2py/applications/admin/&#x27;, &#x27;/home/dell/Downloads/web2py/applications/quiztopher/&#x27;])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">applications_parent</td><td style="vertical-align:top;">:</td><td><div>/home/dell/Downloads/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cmd_args</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cmd_options</td><td style="vertical-align:top;">:</td><td><div>&lt;Values at 0x25111b8: {&#x27;verbose&#x27;: False, &#x27;ip&#x27;: &#x27;127.0.0.1&#x27;, &#x27;debuglevel&#x27;: 30, &#x27;with_scheduler&#x27;: False, &#x27;ips&#x27;: [&#x27;127.0.1.1&#x27;], &#x27;shutdown_timeout&#x27;: 5, &#x27;taskbar&#x27;: False, &#x27;with_coverage&#x27;: False, &#x27;port&#x27;: 8000, &#x27;maxthreads&#x27;: None, &#x27;softcron&#x27;: False, &#x27;server_name&#x27;: &#x27;ubuntu&#x27;, &#x27;bpython&#x27;: False, &#x27;nogui&#x27;: True, &#x27;pid_filename&#x27;: &#x27;httpserver.pid&#x27;, &#x27;extcron&#x27;: False, &#x27;runcron&#x27;: False, &#x27;run_system_tests&#x27;: False, &#x27;test&#x27;: None, &#x27;folder&#x27;: &#x27;/home/dell/Downloads/web2py&#x27;, &#x27;config&#x27;: &#x27;&#x27;, &#x27;minthreads&#x27;: None, &#x27;shell&#x27;: None, &#x27;run&#x27;: &#x27;&#x27;, &#x27;log_filename&#x27;: &#x27;httpserver.log&#x27;, &#x27;profiler_dir&#x27;: None, &#x27;args&#x27;: [&#x27;&#x27;], &#x27;socket_timeout&#x27;: 5, &#x27;ssl_ca_certificate&#x27;: None, &#x27;scheduler&#x27;: None, &#x27;interfaces&#x27;: None, &#x27;ssl_private_key&#x27;: &#x27;&#x27;, &#x27;scheduler_groups&#x27;: None, &#x27;password&#x27;: &#x27;1234&#x27;, &#x27;request_queue_size&#x27;: 5, &#x27;ssl_certificate&#x27;: &#x27;&#x27;, &#x27;cronjob&#x27;: False, &#x27;numthreads&#x27;: None, &#x27;quiet&#x27;: False, &#x27;import_models&#x27;: False, &#x27;timeout&#x27;: 10, &#x27;plain&#x27;: False, &#x27;nobanner&#x27;: False}&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">db_sessions</td><td style="vertical-align:top;">:</td><td><div>set([])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">debugging</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">gluon_parent</td><td style="vertical-align:top;">:</td><td><div>/home/dell/Downloads/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_jython</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_pypy</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_source</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">local_hosts</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>ubuntu.ubuntu-domain</div></td></tr><tr><td><div>::ffff:127.0.0.1</div></td></tr><tr><td><div>::1</div></td></tr><tr><td><div>ubuntu</div></td></tr><tr><td><div>127.0.1.1</div></td></tr><tr><td><div>127.0.0.1</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">web2py_version</td><td style="vertical-align:top;">:</td><td><div>2.9.4-stable+timestamp.2014.03.05.04.44.09</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_https</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_local</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_restful</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">now</td><td style="vertical-align:top;">:</td><td><div>datetime.datetime(2014, 4, 23, 3, 26, 43, 922573)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">raw_args</td><td style="vertical-align:top;">:</td><td><div>db/questions</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">raw_extension</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">url</td><td style="vertical-align:top;">:</td><td><div>/quiztopher/appadmin/insert/db/questions</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">utcnow</td><td style="vertical-align:top;">:</td><td><div>datetime.datetime(2014, 4, 22, 21, 56, 43, 922603)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">uuid</td><td style="vertical-align:top;">:</td><td><div>quiztopher/127.0.0.1.2014-04-23.03-26-43.ea555b08-5e37-4105-87a6-17d7c96caaca</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi</td><td style="vertical-align:top;">:</td><td><div>&lt;gluon.main.LazyWSGI object at 0x7f3ebc369590&gt;</div></td></tr></table></div>'
+tRp58
+sS'frames'
+p59
+(lp60
+(dp61
+S'file'
+p62
+S'/home/dell/Downloads/web2py/gluon/restricted.py'
+p63
+sS'dump'
+p64
+(dp65
+S'environment'
+p66
+S"{'A': <class 'gluon.html.A'>, 'ANY_OF': <class 'gluon.validators.ANY_OF'>, 'Auth': <class 'gluon.tools.Auth'>, 'B': <class 'gluon.html.B'>, 'BEAUTIFY': <class 'gluon.html.BEAUTIFY'>, 'BODY': <class 'gluon.html.BODY'>, 'BR': <class 'gluon.html.BR'>, 'BUTTON': <class 'gluon.html.BUTTON'>, 'CAT': <class 'gluon.html.CAT'>, 'CENTER': <class 'gluon.html.CENTER'>, ...}"
+p67
+sS'ccode'
+p68
+S'<code object <module> at 0x7f3eb8558ab0, file "/...y/applications/quiztopher/models/db.py", line 12>'
+p69
+ssS'lnum'
+p70
+I217
+sS'lines'
+p71
+(dp72
+I212
+S'    try:'
+p73
+sI213
+S'        if isinstance(code, types.CodeType):'
+p74
+sI214
+S'            ccode = code'
+p75
+sI215
+S'        else:'
+p76
+sI216
+S'            ccode = compile2(code, layer)'
+p77
+sI217
+S'        exec ccode in environment'
+p78
+sI218
+S'    except HTTP:'
+p79
+sI219
+S'        raise'
+p80
+sI220
+S'    except RestrictedError:'
+p81
+sI221
+S'        # do not encapsulate (obfuscate) the original RestrictedError'
+p82
+ssS'call'
+p83
+S"(code='# -*- coding: utf-8 -*-\\n\\n#######################...ble auditing\\n# auth.enable_record_versioning(db)\\n', environment={'A': <class 'gluon.html.A'>, 'ANY_OF': <class 'gluon.validators.ANY_OF'>, 'Auth': <class 'gluon.tools.Auth'>, 'B': <class 'gluon.html.B'>, 'BEAUTIFY': <class 'gluon.html.BEAUTIFY'>, 'BODY': <class 'gluon.html.BODY'>, 'BR': <class 'gluon.html.BR'>, 'BUTTON': <class 'gluon.html.BUTTON'>, 'CAT': <class 'gluon.html.CAT'>, 'CENTER': <class 'gluon.html.CENTER'>, ...}, layer='/home/dell/Downloads/web2py/applications/quiztopher/models/db.py')"
+p84
+sS'func'
+p85
+S'restricted'
+p86
+sa(dp87
+g62
+S'/home/dell/Downloads/web2py/applications/quiztopher/models/db.py'
+p88
+sg64
+(dp89
+S'Field'
+p90
+S"<class 'gluon.dal.Field'>"
+p91
+sS'string'
+p92
+S'undefined'
+p93
+ssg70
+I133
+sg71
+(dp94
+I128
+S"    Field('question',length='512',default='',requires=[IS_NOT_EMPTY()]),"
+p95
+sI129
+S"    Field('opt1',length='512',default='',requires=[IS_NOT_EMPTY()]),"
+p96
+sI130
+S"    Field('opt2',length='512',default='',requires=[IS_NOT_EMPTY()]),"
+p97
+sI131
+S"    Field('opt3',length='512',default='',requires=[IS_NOT_EMPTY()]),"
+p98
+sI132
+S"    Field('opt4',length='512',default='',requires=[IS_NOT_EMPTY()]),"
+p99
+sI133
+S"    Field('answer',string)"
+p100
+sI134
+S'    )'
+p101
+sI135
+S''
+sI136
+S"#db.questions.category.requires=IS_IN_DB(db,db.category.id,'%(id)s',zero=T('choose one'))"
+p102
+sI137
+S"#db.questions.subcategory.requires=IS_IN_DB(db,db.subcategory.id,'%(id)s',zero=T('choose one'))"
+p103
+ssg83
+S'()'
+p104
+sg85
+S'<module>'
+p105
+sasS'pyver'
+p106
+S'Python 2.7.4: /usr/bin/python (prefix: /usr)'
+p107
+sS'session'
+p108
+g57
+(S's\xd5\x04\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top;">ansDict</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cat</td><td style="vertical-align:top;">:</td><td><div>1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">counter</td><td style="vertical-align:top;">:</td><td><div>1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">first</td><td style="vertical-align:top;">:</td><td><div>10101</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">last_orderby</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">last_query</td><td style="vertical-align:top;">:</td><td><div>db.questions.id&gt;0</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">quesNo</td><td style="vertical-align:top;">:</td><td><div>10101</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">subCatNumber</td><td style="vertical-align:top;">:</td><td><div>101</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">topic</td><td style="vertical-align:top;">:</td><td><div>1</div></td></tr></table></div>'
+tRp109
+sS'etype'
+p110
+S"<type 'exceptions.NameError'>"
+p111
+sS'date'
+p112
+S'Wed Apr 23 03:26:44 2014'
+p113
+sS'response'
+p114
+g57
+(S's\xf2\x16\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top;">body</td><td style="vertical-align:top;">:</td><td><div>&lt;cStringIO.StringO object at 0x7f3ec03c9df8&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cookies</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">session_id_quiztopher</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-9cbc7951-331b-4981-903c-8adbfa6a3db5<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div>/</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">delimiters</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>{{</div></td></tr><tr><td><div>}}</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">files</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">flash</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">generic_patterns</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>*</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">headers</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">X-Powered-By</td><td style="vertical-align:top;">:</td><td><div>web2py</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">menu</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">meta</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">models_to_run</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>^\\w+\\.py$</div></td></tr><tr><td><div>^appadmin/\\w+\\.py$</div></td></tr><tr><td><div>^appadmin/insert/\\w+\\.py$</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">postprocessing</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_client</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_cookie_compression_level</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_cookie_expires</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_cookie_key</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_data_name</td><td style="vertical-align:top;">:</td><td><div>session_data_quiztopher</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_file</td><td style="vertical-align:top;">:</td><td><div>&lt;open file &#x27;/home/dell/Downloads/web2py/applications/quiztopher/sessions/127.0.0.1-9cbc7951-331b-4981-903c-8adbfa6a3db5&#x27;, mode &#x27;rb+&#x27; at 0x7f3ebc383930&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_filename</td><td style="vertical-align:top;">:</td><td><div>/home/dell/Downloads/web2py/applications/quiztopher/sessions/127.0.0.1-9cbc7951-331b-4981-903c-8adbfa6a3db5</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_hash</td><td style="vertical-align:top;">:</td><td><div>eff29b006c830415203513f99ee7f90e</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-9cbc7951-331b-4981-903c-8adbfa6a3db5</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id_name</td><td style="vertical-align:top;">:</td><td><div>session_id_quiztopher</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_locked</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_masterapp</td><td style="vertical-align:top;">:</td><td><div>quiztopher</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_new</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_storage_type</td><td style="vertical-align:top;">:</td><td><div>file</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">status</td><td style="vertical-align:top;">:</td><td><div>200</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">view</td><td style="vertical-align:top;">:</td><td><div>appadmin/insert.html</div></td></tr></table></div>'
+tRp115
+sS'locals'
+p116
+(dp117
+S'Service'
+p118
+S"<class 'gluon.tools.Service'>"
+p119
+sS'OBJECT'
+p120
+S"<class 'gluon.html.OBJECT'>"
+p121
+sS'SQLDB'
+p122
+S"<class 'gluon.dal.DAL'>"
+p123
+sg108
+S"<Storage {'last_query': 'db.questions.id>0', '_f...8-f3e7-4af8-9720-8072986cb6b8'], 'first': 10101}>"
+p124
+sS'LINK'
+p125
+S"<class 'gluon.html.LINK'>"
+p126
+sS'BR'
+p127
+S"<class 'gluon.html.BR'>"
+p128
+sS'local_import'
+p129
+S'<function <lambda>>'
+p130
+sS'OPTGROUP'
+p131
+S"<class 'gluon.html.OPTGROUP'>"
+p132
+sS'LI'
+p133
+S"<class 'gluon.html.LI'>"
+p134
+sS'PRE'
+p135
+S"<class 'gluon.html.PRE'>"
+p136
+sS'IS_INT_IN_RANGE'
+p137
+S"<class 'gluon.validators.IS_INT_IN_RANGE'>"
+p138
+sS'IS_LOWER'
+p139
+S"<class 'gluon.validators.IS_LOWER'>"
+p140
+sS'IS_STRONG'
+p141
+S"<class 'gluon.validators.IS_STRONG'>"
+p142
+sS'cache'
+p143
+S'<gluon.cache.Cache object>'
+p144
+sS'IS_IN_DB'
+p145
+S"<class 'gluon.validators.IS_IN_DB'>"
+p146
+sS'TAG'
+p147
+S'<gluon.html.__TAG__ object>'
+p148
+sS'SQLField'
+p149
+S"<class 'gluon.dal.Field'>"
+p150
+sS'mail'
+p151
+S'<gluon.tools.Mail object>'
+p152
+sS'BODY'
+p153
+S"<class 'gluon.html.BODY'>"
+p154
+sS'IS_DATE_IN_RANGE'
+p155
+S"<class 'gluon.validators.IS_DATE_IN_RANGE'>"
+p156
+sS'TH'
+p157
+S"<class 'gluon.html.TH'>"
+p158
+sS'URL'
+p159
+S'<function URL>'
+p160
+sS'__file__'
+p161
+S"'/home/dell/Downloads/web2py/applications/quiztopher/models/db.py'"
+p162
+sS'db'
+p163
+S'<DAL uri="sqlite://storage.sqlite">'
+p164
+sS'auth'
+p165
+S'<gluon.tools.Auth object>'
+p166
+sS'P'
+S"<class 'gluon.html.P'>"
+p167
+sS'TFOOT'
+p168
+S"<class 'gluon.html.TFOOT'>"
+p169
+sS'XHTML'
+p170
+S"<class 'gluon.html.XHTML'>"
+p171
+sS'ON'
+p172
+S'True'
+p173
+sS'OL'
+p174
+S"<class 'gluon.html.OL'>"
+p175
+sS'TEXTAREA'
+p176
+S"<class 'gluon.html.TEXTAREA'>"
+p177
+sS'MENU'
+p178
+S"<class 'gluon.html.MENU'>"
+p179
+sS'LOAD'
+p180
+S'<function LOAD>'
+p181
+sS'CODE'
+p182
+S"<class 'gluon.html.CODE'>"
+p183
+sS'HTTP'
+p184
+S"<class 'gluon.http.HTTP'>"
+p185
+sS'HR'
+p186
+S"<class 'gluon.html.HR'>"
+p187
+sS'IS_DATETIME'
+p188
+S"<class 'gluon.validators.IS_DATETIME'>"
+p189
+sS'HEAD'
+p190
+S"<class 'gluon.html.HEAD'>"
+p191
+sS'LABEL'
+p192
+S"<class 'gluon.html.LABEL'>"
+p193
+sS'CLEANUP'
+p194
+S"<class 'gluon.validators.CLEANUP'>"
+p195
+sS'plugins'
+p196
+S'<gluon.tools.PluginManager object>'
+p197
+sS'SELECT'
+p198
+S"<class 'gluon.html.SELECT'>"
+p199
+sS'use_janrain'
+p200
+S'<function use_janrain>'
+p201
+sS'CENTER'
+p202
+S"<class 'gluon.html.CENTER'>"
+p203
+sS'prettydate'
+p204
+S'<function prettydate>'
+p205
+sS'custom_auth_table'
+p206
+S'<Table auth_user (id,first_name,last_name,userna...n_id,dodgeball_high_score,memorygame_high_score)>'
+p207
+sS'Crud'
+p208
+S"<class 'gluon.tools.Crud'>"
+p209
+sS'Auth'
+p210
+S"<class 'gluon.tools.Auth'>"
+p211
+sS'COL'
+p212
+S"<class 'gluon.html.COL'>"
+p213
+sS'__builtins__'
+p214
+S"{'ArithmeticError': <type 'exceptions.ArithmeticError'>, 'AssertionError': <type 'exceptions.AssertionError'>, 'AttributeError': <type 'exceptions.AttributeError'>, 'BaseException': <type 'exceptions.BaseException'>, 'BufferError': <type 'exceptions.BufferError'>, 'BytesWarning': <type 'exceptions.BytesWarning'>, 'DeprecationWarning': <type 'exceptions.DeprecationWarning'>, 'EOFError': <type 'exceptions.EOFError'>, 'Ellipsis': Ellipsis, 'EnvironmentError': <type 'exceptions.EnvironmentError'>, ...}"
+p215
+sS'HTML'
+p216
+S"<class 'gluon.html.HTML'>"
+p217
+sS'SQLFORM'
+p218
+S"<class 'gluon.sqlhtml.SQLFORM'>"
+p219
+sS'EM'
+p220
+S"<class 'gluon.html.EM'>"
+p221
+sS'redirect'
+p222
+S'<function redirect>'
+p223
+sS'FIELDSET'
+p224
+S"<class 'gluon.html.FIELDSET'>"
+p225
+sS'IS_EQUAL_TO'
+p226
+S"<class 'gluon.validators.IS_EQUAL_TO'>"
+p227
+sS'embed64'
+p228
+S'<function embed64>'
+p229
+sS'IS_LIST_OF'
+p230
+S"<class 'gluon.validators.IS_LIST_OF'>"
+p231
+sS'__name__'
+p232
+S"'__restricted__'"
+p233
+sS'EMBED'
+p234
+S"<class 'gluon.html.EMBED'>"
+p235
+sS'FORM'
+p236
+S"<class 'gluon.html.FORM'>"
+p237
+sS'H2'
+p238
+S"<class 'gluon.html.H2'>"
+p239
+sS'H3'
+p240
+S"<class 'gluon.html.H3'>"
+p241
+sS'BUTTON'
+p242
+S"<class 'gluon.html.BUTTON'>"
+p243
+sS'H1'
+p244
+S"<class 'gluon.html.H1'>"
+p245
+sS'H6'
+p246
+S"<class 'gluon.html.H6'>"
+p247
+sS'H4'
+p248
+S"<class 'gluon.html.H4'>"
+p249
+sS'H5'
+p250
+S"<class 'gluon.html.H5'>"
+p251
+sS'UL'
+p252
+S"<class 'gluon.html.UL'>"
+p253
+sS'IS_UPPER'
+p254
+S"<class 'gluon.validators.IS_UPPER'>"
+p255
+sS'xmlescape'
+p256
+S'<function xmlescape>'
+p257
+sS'IS_TIME'
+p258
+S"<class 'gluon.validators.IS_TIME'>"
+p259
+sS'OPTION'
+p260
+S"<class 'gluon.html.OPTION'>"
+p261
+sS'TITLE'
+p262
+S"<class 'gluon.html.TITLE'>"
+p263
+sS'CRYPT'
+p264
+S"<class 'gluon.validators.CRYPT'>"
+p265
+sS'IS_EMPTY_OR'
+p266
+S"<class 'gluon.validators.IS_EMPTY_OR'>"
+p267
+sS'MARKMIN'
+p268
+S"<class 'gluon.html.MARKMIN'>"
+p269
+sS'INPUT'
+p270
+S"<class 'gluon.html.INPUT'>"
+p271
+sS'STRONG'
+p272
+S"<class 'gluon.html.STRONG'>"
+p273
+sS'auth_table'
+p274
+S'<Table auth_user (id,first_name,last_name,userna...n_id,dodgeball_high_score,memorygame_high_score)>'
+p275
+sS'service'
+p276
+S'<gluon.tools.Service object>'
+p277
+sS'SCRIPT'
+p278
+S"<class 'gluon.html.SCRIPT'>"
+p279
+sS'TABLE'
+p280
+S"<class 'gluon.html.TABLE'>"
+p281
+sS'IS_IPV4'
+p282
+S"<class 'gluon.validators.IS_IPV4'>"
+p283
+sS'IS_LENGTH'
+p284
+S"<class 'gluon.validators.IS_LENGTH'>"
+p285
+sS'IS_IPV6'
+p286
+S"<class 'gluon.validators.IS_IPV6'>"
+p287
+sS'XML'
+p288
+S"<class 'gluon.html.XML'>"
+p289
+sS'B'
+S"<class 'gluon.html.B'>"
+p290
+sS'IMG'
+p291
+S"<class 'gluon.html.IMG'>"
+p292
+sS'SQLTABLE'
+p293
+S"<class 'gluon.sqlhtml.SQLTABLE'>"
+p294
+sS'IS_MATCH'
+p295
+S"<class 'gluon.validators.IS_MATCH'>"
+p296
+sS'IS_ALPHANUMERIC'
+p297
+S"<class 'gluon.validators.IS_ALPHANUMERIC'>"
+p298
+sS'SPAN'
+p299
+S"<class 'gluon.html.SPAN'>"
+p300
+sS'IS_JSON'
+p301
+S"<class 'gluon.validators.IS_JSON'>"
+p302
+sS'IS_IPADDRESS'
+p303
+S"<class 'gluon.validators.IS_IPADDRESS'>"
+p304
+sS'IS_SLUG'
+p305
+S"<class 'gluon.validators.IS_SLUG'>"
+p306
+sS'BEAUTIFY'
+p307
+S"<class 'gluon.html.BEAUTIFY'>"
+p308
+sS'META'
+p309
+S"<class 'gluon.html.META'>"
+p310
+sS'IS_DATE'
+p311
+S"<class 'gluon.validators.IS_DATE'>"
+p312
+sS'IS_EMAIL'
+p313
+S"<class 'gluon.validators.IS_EMAIL'>"
+p314
+sS'IS_NOT_EMPTY'
+p315
+S"<class 'gluon.validators.IS_NOT_EMPTY'>"
+p316
+sS'IS_FLOAT_IN_RANGE'
+p317
+S"<class 'gluon.validators.IS_FLOAT_IN_RANGE'>"
+p318
+sS'TBODY'
+p319
+S"<class 'gluon.html.TBODY'>"
+p320
+sS'CAT'
+p321
+S"<class 'gluon.html.CAT'>"
+p322
+sS'Field'
+p323
+S"<class 'gluon.dal.Field'>"
+p324
+sS'IS_LIST_OF_EMAILS'
+p325
+S"<class 'gluon.validators.IS_LIST_OF_EMAILS'>"
+p326
+sS'DIV'
+p327
+S"<class 'gluon.html.DIV'>"
+p328
+sS'LEGEND'
+p329
+S"<class 'gluon.html.LEGEND'>"
+p330
+sS'COLGROUP'
+p331
+S"<class 'gluon.html.COLGROUP'>"
+p332
+sS'DAL'
+p333
+S"<class 'gluon.dal.DAL'>"
+p334
+sS'TT'
+p335
+S"<class 'gluon.html.TT'>"
+p336
+sS'TR'
+p337
+S"<class 'gluon.html.TR'>"
+p338
+sS'__package__'
+p339
+S'None'
+p340
+sS'IFRAME'
+p341
+S"<class 'gluon.html.IFRAME'>"
+p342
+sS'TD'
+p343
+S"<class 'gluon.html.TD'>"
+p344
+sS'PluginManager'
+p345
+S"<class 'gluon.tools.PluginManager'>"
+p346
+sS'IS_URL'
+p347
+S"<class 'gluon.validators.IS_URL'>"
+p348
+sS'A'
+S"<class 'gluon.html.A'>"
+p349
+sS'STYLE'
+p350
+S"<class 'gluon.html.STYLE'>"
+p351
+sS'IS_DATETIME_IN_RANGE'
+p352
+S"<class 'gluon.validators.IS_DATETIME_IN_RANGE'>"
+p353
+sS'IS_IMAGE'
+p354
+S"<class 'gluon.validators.IS_IMAGE'>"
+p355
+sS'I'
+S"<class 'gluon.html.I'>"
+p356
+sS'crud'
+p357
+S'<gluon.tools.Crud object>'
+p358
+sS'IS_NOT_IN_DB'
+p359
+S"<class 'gluon.validators.IS_NOT_IN_DB'>"
+p360
+sg114
+S"<Storage {'body': <cStringIO.StringO object at 0...0x7f3ecc861d70>, 'view': 'appadmin/insert.html'}>"
+p361
+sS'THEAD'
+p362
+S"<class 'gluon.html.THEAD'>"
+p363
+sS'ANY_OF'
+p364
+S"<class 'gluon.validators.ANY_OF'>"
+p365
+sS'IS_NULL_OR'
+p366
+S"<class 'gluon.validators.IS_EMPTY_OR'>"
+p367
+sg56
+S"<Storage {'_vars': None, 'function': 'insert', '...dell/Downloads/web2py/applications/quiztopher/'}>"
+p368
+sS'IS_EXPR'
+p369
+S"<class 'gluon.validators.IS_EXPR'>"
+p370
+sS'IS_IN_SET'
+p371
+S"<class 'gluon.validators.IS_IN_SET'>"
+p372
+sS'IS_UPLOAD_FILENAME'
+p373
+S"<class 'gluon.validators.IS_UPLOAD_FILENAME'>"
+p374
+sS'IS_DECIMAL_IN_RANGE'
+p375
+S"<class 'gluon.validators.IS_DECIMAL_IN_RANGE'>"
+p376
+sS'T'
+S'<gluon.languages.translator object>'
+p377
+sssS'traceback'
+p378
+S'Traceback (most recent call last):\n  File "/home/dell/Downloads/web2py/gluon/restricted.py", line 217, in restricted\n    exec ccode in environment\n  File "/home/dell/Downloads/web2py/applications/quiztopher/models/db.py", line 133, in <module>\n    Field(\'answer\',string)\nNameError: name \'string\' is not defined\n'
+p379
+s.

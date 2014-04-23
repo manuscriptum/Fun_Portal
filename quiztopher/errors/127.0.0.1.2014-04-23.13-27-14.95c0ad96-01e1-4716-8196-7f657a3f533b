@@ -1,0 +1,832 @@
+(dp1
+S'output'
+p2
+S"<type 'exceptions.AttributeError'> 'str' object has no attribute 'RollNo'"
+p3
+sS'layer'
+p4
+S'/home/dell/Downloads/web2py/applications/quiztopher/views/default/quiz.html'
+p5
+sS'code'
+p6
+S'response.write(\'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\\n<!--\\nAuthor: Reality Software\\nWebsite: http://www.realitysoftware.ca\\nNote: This is a free template released under the Creative Commons Attribution 3.0 license, \\nwhich means you can use it in any way you want provided you keep the link to the author intact.\\n-->\\n<html xmlns="http://www.w3.org/1999/xhtml">\\n <head>\\n\\n\\n  <title>\\n   \', escape=False)\nresponse.write(response.title or request.application)\nresponse.write(\'\\n  </title>\\n  \', escape=False)\nresponse.files.append(URL(request.application,\'static\',\'plugin_layouts/layouts/RedCity/style.css\'))\nresponse.write(\'\\n  \', escape=False)\nresponse.files.append(URL(\'static\',\'plugin_layouts/superfish.js\'))\nresponse.write(\'\\n  \', escape=False)\nresponse.write(\'<script type="text/javascript"><!--\\n    // These variables are used by the web2py_ajax_init function in web2py_ajax.js (which is loaded below).\\n    var w2p_ajax_confirm_message = "\', escape=False)\nresponse.write(T(\'Are you sure you want to delete this object?\'))\nresponse.write(\'";\\n    var w2p_ajax_disable_with_message = "\', escape=False)\nresponse.write(T(\'Working...\'))\nresponse.write(\'";\\n    var w2p_ajax_date_format = "\', escape=False)\nresponse.write(T(\'%Y-%m-%d\'))\nresponse.write(\'";\\n    var w2p_ajax_datetime_format = "\', escape=False)\nresponse.write(T(\'%Y-%m-%d %H:%M:%S\'))\nresponse.write(\'";\\n    var ajax_error_500 = \\\'\', escape=False)\nresponse.write(T.M(\'An error occured, please [[reload %s]] the page\') % URL(args=request.args, vars=request.get_vars))\nresponse.write("\'\\n    //--></script>\\n", escape=False)\nresponse.files.insert(0,URL(\'static\',\'js/jquery.js\'))\nresponse.files.insert(1,URL(\'static\',\'css/calendar.css\'))\nresponse.files.insert(2,URL(\'static\',\'js/calendar.js\'))\nresponse.files.insert(3,URL(\'static\',\'js/web2py.js\'))\nresponse.include_meta()\nresponse.include_files()\nresponse.write(\'\\n\', escape=False)\nresponse.write(\'\\n  <style>\\nul.web2py-menu-vertical { width: 150px; position: relative; top:1em; left:1em;  z-index:30; border:0; margin:0; padding: 0; list-style: none; text-decoration: none;}\\nul.web2py-menu-vertical li { margin:0; padding:0; border:0; width: 150px; background: black; text-align:left;}\\nul.web2py-menu-vertical li a { margin:0; padding: 1px 3px 1px 3px; border:0; width: 144px; color: white; font-size:12px;}\\ndiv.flash { position: fixed; float: right; padding: 10px; top: 10px; right: 30px; opacity: 0.75; margin: 10px 10px 10px 10px; text-align: center; clear: both; color: #fff; font-size: 11pt; text-align: center; vertical-align: middle; cursor: pointer; background: black; border: 2px solid #fff; -moz-border-radius: 5px; -webkit-border-radius: 5px; z-index: 2; }\\ndiv.error { background-color: red; color: white; padding: 3px; }\\n.auth_navbar { text-align:right; z-index:20; position: absolute; top: 2px; right:30px; border:0; padding:0 }\\n  </style>\\n </head>\\n <body>\\n  <!-- start header -->\\n  \', escape=False)\ntry:\n    response.write(auth.navbar(action=URL(\'default\',\'user\')))\nexcept:pass\nresponse.write(\'\\n\\n  <div id="container">\\n   <!-- header -->\\n   <div id="header">\\n    <div id="logo">\\n     <a href="#">\\n      \', escape=False)\nresponse.write(T("Quiztopher"))\nresponse.write(\'\\n     </a>\\n    </div>\\n    <div id="menu">\\n     \', escape=False)\nresponse.write(MENU(response.menu,_class=\'web2py-menu\'))\nresponse.write(\'\\n    <script>\\n      jQuery(document).ready(function(){jQuery(\\\'ul.web2py-menu\\\').superfish({delay:400});});\\n    </script>\\n    </div>\\n   </div>\\n   <!--end header -->\\n   <!-- main -->\\n   <div id="main">\\n    <div id="content">\\n     \', escape=False)\nresponse.write(\'\\n\', escape=False)\nresponse.write(BEAUTIFY(session.topic))\nresponse.write(\' \\n\\n<br>\\n\', escape=False)\nfor row in var:\n    response.write(\'\\n<span id="SerialNumber">\', escape=False)\n    response.write(row.RollNo)\n    response.write(\'</span>\\n<span id="Question">\\n\', escape=False)\n    response.write(row.question)\n    response.write(\'\\n</span><br><br>\\n<input type="radio" name="option" value="opt1" /> <span id="Opt1"> \', escape=False)\n    response.write(row.opt1)\n    response.write(\'\\n</span>\\n<br><br>\\n<input type="radio" name="option" value="opt2" id="option2" /> <span id="Opt2"> \', escape=False)\n    response.write(row.opt2)\n    response.write(\'\\n</span>\\n<br><br>\\n<input type="radio" name="option" value="opt3" /> <span id="Opt3"> \', escape=False)\n    response.write(row.opt3)\n    response.write(\'\\n</span>\\n<br><br>\\n<input type="radio" name="option" value="opt4" /> <span id="Opt4"> \', escape=False)\n    response.write(row.opt4)\n    response.write(\'\\n</span>\\n\\n<button id="prev" name="button" value="prev" onclick="Prev();">Previous</button>\\n<button id="submit" name="submit" onclick="Save();">Save</button>\\n<button id="submit" name="button" onclick="Next();">Next</button>\\n\', escape=False)\n    pass\nresponse.write(\'\\n<br>\\n<script src="\', escape=False)\nresponse.write(URL(\'static\',\'js/countdown.js\'))\nresponse.write(\'" type="text/javascript"></script>\\n<script type="application/javascript">\\n//SerialNumber = getElementById(\\\'SerialNum\\\').innerHTML;\\nvar myCountdownTest = new Countdown({\\n  time:300,\\n  width : 300, \\n  height  : 50,\\n//  onComplete : doneHandler\\n});\\n</script>\\n<script type="text/javascript">\\n\\nfunction Save() {\\n  options = document.getElementsByName(\\\'option\\\');\\n  var value = false;\\n  for ( var i = 0; i < options.length; i++)\\n  {\\n    if (options[i].checked)\\n    {\\n      value = options[i].value;\\n    }\\n  }\\n  var SerialNumber = document.getElementById(\\\'SerialNumber\\\').innerHTML\\n  console.log(SerialNumber)\\n  ajax(\\\'tempSave?SerialNumber=\\\' + SerialNumber,[],\\\'target\\\');\\n  ajax(\\\'selectedOption?value=\\\' + value,[],\\\'target\\\');\\n  }\\n\\nfunction Next() {\\n  \\nvar xmlhttp=new XMLHttpRequest();\\nxmlhttp.onreadystatechange=function()\\n  {\\n  if (xmlhttp.readyState==4 && xmlhttp.status==200)\\n    {\\t\\n       \\tjsn = JSON.parse(xmlhttp.responseText);\\n     //   SerialNumber = jsn.serial;\\n    //  document.getElementById("SerialNum").innerHTML=jsn.serial;\\n      document.getElementById("SerialNumber").innerHTML=jsn.serial\\n    \\tdocument.getElementById("Question").innerHTML=jsn.question;\\n    \\tdocument.getElementById("Opt1").innerHTML=jsn.opt1;\\n    \\tdocument.getElementById("Opt2").innerHTML=jsn.opt2;\\n      document.getElementById("Opt3").innerHTML=jsn.opt3;\\n      document.getElementById("Opt4").innerHTML=jsn.opt4;\\n      var SerialNumber = document.getElementById(\\\'SerialNumber\\\').innerHTML\\n///      console.log(SerialNumber)\\n      ajax(\\\'tempSave?SerialNumber=\\\' + SerialNumber,[],\\\'target\\\');  \\n\\n    }\\n}\\nxmlhttp.open("GET","nextQuestion",true);\\nxmlhttp.send();\\n//ajax(\\\'nextQuestion?SerialNumber=\\\' + SerialNumber,[],\\\'target\\\');\\n}\\n\\nfunction Prev() {\\n\\nvar xmlhttp=new XMLHttpRequest();\\nxmlhttp.onreadystatechange=function()\\n  {\\n  if (xmlhttp.readyState==4 && xmlhttp.status==200)\\n    {\\t\\n       \\tjsn = JSON.parse(xmlhttp.responseText);\\n    //  SerialNumber = jsn.serial;  \\n    //  document.getElementById("SerialNum").innerHTML=jsn.serial;\\n      document.getElementById("SerialNumber").innerHTML=jsn.serial\\n    \\tdocument.getElementById("Question").innerHTML=jsn.question;\\n    \\tdocument.getElementById("Opt1").innerHTML=jsn.opt1;\\n    \\tdocument.getElementById("Opt2").innerHTML=jsn.opt2;\\n      document.getElementById("Opt3").innerHTML=jsn.opt3;\\n      document.getElementById("Opt4").innerHTML=jsn.opt4;\\n      var SerialNumber = document.getElementById(\\\'SerialNumber\\\').innerHTML\\n   //   console.log(SerialNumber)\\n  ajax(\\\'tempSave?SerialNumber=\\\' + SerialNumber,[],\\\'target\\\');\\n    }\\n}\\nxmlhttp.open("GET","prevQuestion",true);\\nxmlhttp.send();\\n}\\n\\n</script>\\n\\n\\n<div id="txt"></div>\\n<button onclick="stopCount()">Pause countdown!</button>\\n\\n\\n<script>\\nfunction startCount()\\n{\\nif (!timer_is_on)\\n  {\\n  timer_is_on=1;\\n  timedCount();\\n  }\\n}\\nvar c = 5000;\\nvar t;\\nvar timer_is_on = 0;\\n\\nfunction timedCount()\\n{\\ndocument.getElementById("txt").innerHTML=c;\\nc = c-1;\\nif(c!=-1)\\n{\\nt = setTimeout(function(){timedCount()},1000);\\n}\\nelse\\n{\\nwindow.location.href="quizDone.html"\\n}\\n}\\nfunction stopCount()\\n{\\nclearTimeout(t);\\ntimer_is_on=0;\\nalert("Click OK to continue");\\nstartCount();\\n}\\nstartCount();\\n\\n</script>\\n\', escape=False)\nresponse.write(\'\\n    </div>\\n   </div>\\n   <!-- end main -->\\n \\n  </div>\\n </body>\\n</html>\\n\', escape=False)'
+p7
+sS'snapshot'
+p8
+(dp9
+S'exception'
+p10
+(dp11
+S'__hash__'
+p12
+S"<method-wrapper '__hash__' of exceptions.AttributeError object>"
+p13
+sS'__setattr__'
+p14
+S"<method-wrapper '__setattr__' of exceptions.AttributeError object>"
+p15
+sS'__reduce_ex__'
+p16
+S'<built-in method __reduce_ex__ of exceptions.AttributeError object>'
+p17
+sS'__getslice__'
+p18
+S"<method-wrapper '__getslice__' of exceptions.AttributeError object>"
+p19
+sS'__getitem__'
+p20
+S"<method-wrapper '__getitem__' of exceptions.AttributeError object>"
+p21
+sS'__setstate__'
+p22
+S'<built-in method __setstate__ of exceptions.AttributeError object>'
+p23
+sS'args'
+p24
+S'("\'str\' object has no attribute \'RollNo\'",)'
+p25
+sS'__reduce__'
+p26
+S'<built-in method __reduce__ of exceptions.AttributeError object>'
+p27
+sS'__str__'
+p28
+S"<method-wrapper '__str__' of exceptions.AttributeError object>"
+p29
+sS'__format__'
+p30
+S'<built-in method __format__ of exceptions.AttributeError object>'
+p31
+sS'__getattribute__'
+p32
+S"<method-wrapper '__getattribute__' of exceptions.AttributeError object>"
+p33
+sS'__class__'
+p34
+S"<type 'exceptions.AttributeError'>"
+p35
+sS'__unicode__'
+p36
+S'<built-in method __unicode__ of exceptions.AttributeError object>'
+p37
+sS'__delattr__'
+p38
+S"<method-wrapper '__delattr__' of exceptions.AttributeError object>"
+p39
+sS'__subclasshook__'
+p40
+S'<built-in method __subclasshook__ of type object>'
+p41
+sS'__repr__'
+p42
+S"<method-wrapper '__repr__' of exceptions.AttributeError object>"
+p43
+sS'__dict__'
+p44
+S'{}'
+p45
+sS'__sizeof__'
+p46
+S'<built-in method __sizeof__ of exceptions.AttributeError object>'
+p47
+sS'__doc__'
+p48
+S"'Attribute not found.'"
+p49
+sS'__init__'
+p50
+S"<method-wrapper '__init__' of exceptions.AttributeError object>"
+p51
+sS'__new__'
+p52
+S'<built-in method __new__ of type object>'
+p53
+ssS'evalue'
+p54
+S"'str' object has no attribute 'RollNo'"
+p55
+sS'request'
+p56
+cgluon.html
+XML_unpickle
+p57
+(S'sQ[\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top;">ajax</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">application</td><td style="vertical-align:top;">:</td><td><div>quiztopher</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">args</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cid</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">client</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">controller</td><td style="vertical-align:top;">:</td><td><div>default</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cookies</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">session_id_admin</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-8fd521a5-0f75-4128-821f-1be31845591f<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id_practice1</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-c91a4f48-1119-4842-a474-7a8f052634ca<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id_quiztopher</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-985b5700-7961-45b0-9fc6-72c846589738<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">env</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">HTTP_ACCEPT</td><td style="vertical-align:top;">:</td><td><div>text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_ACCEPT_ENCODING</td><td style="vertical-align:top;">:</td><td><div>gzip, deflate</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_ACCEPT_LANGUAGE</td><td style="vertical-align:top;">:</td><td><div>en-US,en;q=0.5</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_CACHE_CONTROL</td><td style="vertical-align:top;">:</td><td><div>max-age=0</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_CONNECTION</td><td style="vertical-align:top;">:</td><td><div>keep-alive</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_COOKIE</td><td style="vertical-align:top;">:</td><td><div>session_id_quiztopher=127.0.0.1-985b5700-7961-45b0-9fc6-72c846589738; session_id_admin=127.0.0.1-8fd521a5-0f75-4128-821f-1be31845591f; session_id_practice1=127.0.0.1-c91a4f48-1119-4842-a474-7a8f052634ca</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_HOST</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1:8000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_REFERER</td><td style="vertical-align:top;">:</td><td><div>http://127.0.0.1:8000/quiztopher/default/quizTopic</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_USER_AGENT</td><td style="vertical-align:top;">:</td><td><div>Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:26.0) Gecko/20100101 Firefox/26.0</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">PATH_INFO</td><td style="vertical-align:top;">:</td><td><div>/quiztopher/default/quiz</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">QUERY_STRING</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">REMOTE_ADDR</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">REMOTE_PORT</td><td style="vertical-align:top;">:</td><td><div>36697</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">REQUEST_METHOD</td><td style="vertical-align:top;">:</td><td><div>GET</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">SCRIPT_NAME</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">SERVER_NAME</td><td style="vertical-align:top;">:</td><td><div>ubuntu</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">SERVER_PORT</td><td style="vertical-align:top;">:</td><td><div>8000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">SERVER_PROTOCOL</td><td style="vertical-align:top;">:</td><td><div>HTTP/1.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">SERVER_SOFTWARE</td><td style="vertical-align:top;">:</td><td><div>Rocket 1.2.6</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">app_folders</td><td style="vertical-align:top;">:</td><td><div>set([&#x27;/home/dell/Downloads/web2py/applications/practice1/&#x27;, &#x27;/home/dell/Downloads/web2py/applications/admin/&#x27;, &#x27;/home/dell/Downloads/web2py/applications/quiztopher/&#x27;])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">applications_parent</td><td style="vertical-align:top;">:</td><td><div>/home/dell/Downloads/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cmd_args</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cmd_options</td><td style="vertical-align:top;">:</td><td><div>&lt;Values at 0x1b001b8: {&#x27;verbose&#x27;: False, &#x27;ip&#x27;: &#x27;127.0.0.1&#x27;, &#x27;debuglevel&#x27;: 30, &#x27;with_scheduler&#x27;: False, &#x27;ips&#x27;: [&#x27;127.0.1.1&#x27;], &#x27;shutdown_timeout&#x27;: 5, &#x27;taskbar&#x27;: False, &#x27;with_coverage&#x27;: False, &#x27;port&#x27;: 8000, &#x27;maxthreads&#x27;: None, &#x27;softcron&#x27;: False, &#x27;server_name&#x27;: &#x27;ubuntu&#x27;, &#x27;bpython&#x27;: False, &#x27;nogui&#x27;: True, &#x27;pid_filename&#x27;: &#x27;httpserver.pid&#x27;, &#x27;extcron&#x27;: False, &#x27;runcron&#x27;: False, &#x27;run_system_tests&#x27;: False, &#x27;test&#x27;: None, &#x27;folder&#x27;: &#x27;/home/dell/Downloads/web2py&#x27;, &#x27;config&#x27;: &#x27;&#x27;, &#x27;minthreads&#x27;: None, &#x27;shell&#x27;: None, &#x27;run&#x27;: &#x27;&#x27;, &#x27;log_filename&#x27;: &#x27;httpserver.log&#x27;, &#x27;profiler_dir&#x27;: None, &#x27;args&#x27;: [&#x27;&#x27;], &#x27;socket_timeout&#x27;: 5, &#x27;ssl_ca_certificate&#x27;: None, &#x27;scheduler&#x27;: None, &#x27;interfaces&#x27;: None, &#x27;ssl_private_key&#x27;: &#x27;&#x27;, &#x27;scheduler_groups&#x27;: None, &#x27;password&#x27;: &#x27;1234&#x27;, &#x27;request_queue_size&#x27;: 5, &#x27;ssl_certificate&#x27;: &#x27;&#x27;, &#x27;cronjob&#x27;: False, &#x27;numthreads&#x27;: None, &#x27;quiet&#x27;: False, &#x27;import_models&#x27;: False, &#x27;timeout&#x27;: 10, &#x27;plain&#x27;: False, &#x27;nobanner&#x27;: False}&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">db_sessions</td><td style="vertical-align:top;">:</td><td><div>set([])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">debugging</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">gluon_parent</td><td style="vertical-align:top;">:</td><td><div>/home/dell/Downloads/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_accept</td><td style="vertical-align:top;">:</td><td><div>text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_accept_encoding</td><td style="vertical-align:top;">:</td><td><div>gzip, deflate</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_accept_language</td><td style="vertical-align:top;">:</td><td><div>en-US,en;q=0.5</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_cache_control</td><td style="vertical-align:top;">:</td><td><div>max-age=0</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_connection</td><td style="vertical-align:top;">:</td><td><div>keep-alive</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_cookie</td><td style="vertical-align:top;">:</td><td><div>session_id_quiztopher=127.0.0.1-985b5700-7961-45b0-9fc6-72c846589738; session_id_admin=127.0.0.1-8fd521a5-0f75-4128-821f-1be31845591f; session_id_practice1=127.0.0.1-c91a4f48-1119-4842-a474-7a8f052634ca</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_host</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1:8000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_referer</td><td style="vertical-align:top;">:</td><td><div>http://127.0.0.1:8000/quiztopher/default/quizTopic</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_user_agent</td><td style="vertical-align:top;">:</td><td><div>Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:26.0) Gecko/20100101 Firefox/26.0</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_jython</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_pypy</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_source</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">local_hosts</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>ubuntu.ubuntu-domain</div></td></tr><tr><td><div>::ffff:127.0.0.1</div></td></tr><tr><td><div>::1</div></td></tr><tr><td><div>ubuntu</div></td></tr><tr><td><div>127.0.1.1</div></td></tr><tr><td><div>127.0.0.1</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path_info</td><td style="vertical-align:top;">:</td><td><div>/quiztopher/default/quiz</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">query_string</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">remote_addr</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">remote_port</td><td style="vertical-align:top;">:</td><td><div>36697</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">request_method</td><td style="vertical-align:top;">:</td><td><div>GET</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">request_uri</td><td style="vertical-align:top;">:</td><td><div>/quiztopher/default/quiz</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">script_name</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">server_name</td><td style="vertical-align:top;">:</td><td><div>ubuntu</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">server_port</td><td style="vertical-align:top;">:</td><td><div>8000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">server_protocol</td><td style="vertical-align:top;">:</td><td><div>HTTP/1.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">server_software</td><td style="vertical-align:top;">:</td><td><div>Rocket 1.2.6</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">web2py_path</td><td style="vertical-align:top;">:</td><td><div>/home/dell/Downloads/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">web2py_version</td><td style="vertical-align:top;">:</td><td><div>2.9.4-stable+timestamp.2014.03.05.04.44.09</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.errors</td><td style="vertical-align:top;">:</td><td><div>&lt;open file &#x27;&lt;stderr&gt;&#x27;, mode &#x27;w&#x27; at 0x7f8951a3d1e0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.file_wrapper</td><td style="vertical-align:top;">:</td><td><div>&lt;class wsgiref.util.FileWrapper at 0x1a94598&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.input</td><td style="vertical-align:top;">:</td><td><div>&lt;socket._fileobject object at 0x7f89446b33d0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.multiprocess</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.multithread</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.run_once</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.url_scheme</td><td style="vertical-align:top;">:</td><td><div>http</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.version</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>1</div></td></tr><tr><td><div>0</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_errors</td><td style="vertical-align:top;">:</td><td><div>&lt;open file &#x27;&lt;stderr&gt;&#x27;, mode &#x27;w&#x27; at 0x7f8951a3d1e0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_file_wrapper</td><td style="vertical-align:top;">:</td><td><div>&lt;class wsgiref.util.FileWrapper at 0x1a94598&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_input</td><td style="vertical-align:top;">:</td><td><div>&lt;socket._fileobject object at 0x7f89446b33d0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_multiprocess</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_multithread</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_run_once</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_url_scheme</td><td style="vertical-align:top;">:</td><td><div>http</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_version</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>1</div></td></tr><tr><td><div>0</div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">extension</td><td style="vertical-align:top;">:</td><td><div>html</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">folder</td><td style="vertical-align:top;">:</td><td><div>/home/dell/Downloads/web2py/applications/quiztopher/</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">function</td><td style="vertical-align:top;">:</td><td><div>quiz</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">global_settings</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">app_folders</td><td style="vertical-align:top;">:</td><td><div>set([&#x27;/home/dell/Downloads/web2py/applications/practice1/&#x27;, &#x27;/home/dell/Downloads/web2py/applications/admin/&#x27;, &#x27;/home/dell/Downloads/web2py/applications/quiztopher/&#x27;])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">applications_parent</td><td style="vertical-align:top;">:</td><td><div>/home/dell/Downloads/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cmd_args</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cmd_options</td><td style="vertical-align:top;">:</td><td><div>&lt;Values at 0x1b001b8: {&#x27;verbose&#x27;: False, &#x27;ip&#x27;: &#x27;127.0.0.1&#x27;, &#x27;debuglevel&#x27;: 30, &#x27;with_scheduler&#x27;: False, &#x27;ips&#x27;: [&#x27;127.0.1.1&#x27;], &#x27;shutdown_timeout&#x27;: 5, &#x27;taskbar&#x27;: False, &#x27;with_coverage&#x27;: False, &#x27;port&#x27;: 8000, &#x27;maxthreads&#x27;: None, &#x27;softcron&#x27;: False, &#x27;server_name&#x27;: &#x27;ubuntu&#x27;, &#x27;bpython&#x27;: False, &#x27;nogui&#x27;: True, &#x27;pid_filename&#x27;: &#x27;httpserver.pid&#x27;, &#x27;extcron&#x27;: False, &#x27;runcron&#x27;: False, &#x27;run_system_tests&#x27;: False, &#x27;test&#x27;: None, &#x27;folder&#x27;: &#x27;/home/dell/Downloads/web2py&#x27;, &#x27;config&#x27;: &#x27;&#x27;, &#x27;minthreads&#x27;: None, &#x27;shell&#x27;: None, &#x27;run&#x27;: &#x27;&#x27;, &#x27;log_filename&#x27;: &#x27;httpserver.log&#x27;, &#x27;profiler_dir&#x27;: None, &#x27;args&#x27;: [&#x27;&#x27;], &#x27;socket_timeout&#x27;: 5, &#x27;ssl_ca_certificate&#x27;: None, &#x27;scheduler&#x27;: None, &#x27;interfaces&#x27;: None, &#x27;ssl_private_key&#x27;: &#x27;&#x27;, &#x27;scheduler_groups&#x27;: None, &#x27;password&#x27;: &#x27;1234&#x27;, &#x27;request_queue_size&#x27;: 5, &#x27;ssl_certificate&#x27;: &#x27;&#x27;, &#x27;cronjob&#x27;: False, &#x27;numthreads&#x27;: None, &#x27;quiet&#x27;: False, &#x27;import_models&#x27;: False, &#x27;timeout&#x27;: 10, &#x27;plain&#x27;: False, &#x27;nobanner&#x27;: False}&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">db_sessions</td><td style="vertical-align:top;">:</td><td><div>set([])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">debugging</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">gluon_parent</td><td style="vertical-align:top;">:</td><td><div>/home/dell/Downloads/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_jython</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_pypy</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_source</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">local_hosts</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>ubuntu.ubuntu-domain</div></td></tr><tr><td><div>::ffff:127.0.0.1</div></td></tr><tr><td><div>::1</div></td></tr><tr><td><div>ubuntu</div></td></tr><tr><td><div>127.0.1.1</div></td></tr><tr><td><div>127.0.0.1</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">web2py_version</td><td style="vertical-align:top;">:</td><td><div>2.9.4-stable+timestamp.2014.03.05.04.44.09</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_https</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_local</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_restful</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">now</td><td style="vertical-align:top;">:</td><td><div>datetime.datetime(2014, 4, 23, 13, 27, 14, 732746)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">raw_args</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">raw_extension</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">url</td><td style="vertical-align:top;">:</td><td><div>/quiztopher/default/quiz</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">utcnow</td><td style="vertical-align:top;">:</td><td><div>datetime.datetime(2014, 4, 23, 7, 57, 14, 732787)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">uuid</td><td style="vertical-align:top;">:</td><td><div>quiztopher/127.0.0.1.2014-04-23.13-27-14.95c0ad96-01e1-4716-8196-7f657a3f533b</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi</td><td style="vertical-align:top;">:</td><td><div>&lt;gluon.main.LazyWSGI object at 0x1bad410&gt;</div></td></tr></table></div>'
+tRp58
+sS'frames'
+p59
+(lp60
+(dp61
+S'file'
+p62
+S'/home/dell/Downloads/web2py/gluon/restricted.py'
+p63
+sS'dump'
+p64
+(dp65
+S'environment'
+p66
+S"{'A': <class 'gluon.html.A'>, 'ANY_OF': <class 'gluon.validators.ANY_OF'>, 'Auth': <class 'gluon.tools.Auth'>, 'B': <class 'gluon.html.B'>, 'BEAUTIFY': <class 'gluon.html.BEAUTIFY'>, 'BODY': <class 'gluon.html.BODY'>, 'BR': <class 'gluon.html.BR'>, 'BUTTON': <class 'gluon.html.BUTTON'>, 'CAT': <class 'gluon.html.CAT'>, 'CENTER': <class 'gluon.html.CENTER'>, ...}"
+p67
+sS'ccode'
+p68
+S'<code object <module> at 0x7f89441bc730, file "/...ions/quiztopher/views/default/quiz.html", line 1>'
+p69
+ssS'lnum'
+p70
+I217
+sS'lines'
+p71
+(dp72
+I212
+S'    try:'
+p73
+sI213
+S'        if isinstance(code, types.CodeType):'
+p74
+sI214
+S'            ccode = code'
+p75
+sI215
+S'        else:'
+p76
+sI216
+S'            ccode = compile2(code, layer)'
+p77
+sI217
+S'        exec ccode in environment'
+p78
+sI218
+S'    except HTTP:'
+p79
+sI219
+S'        raise'
+p80
+sI220
+S'    except RestrictedError:'
+p81
+sI221
+S'        # do not encapsulate (obfuscate) the original RestrictedError'
+p82
+ssS'call'
+p83
+S'(code=\'response.write(\\\'<!DOCTYPE html PUBLIC "-//W3C//D...n \\\\n  </div>\\\\n </body>\\\\n</html>\\\\n\\\', escape=False)\', environment={\'A\': <class \'gluon.html.A\'>, \'ANY_OF\': <class \'gluon.validators.ANY_OF\'>, \'Auth\': <class \'gluon.tools.Auth\'>, \'B\': <class \'gluon.html.B\'>, \'BEAUTIFY\': <class \'gluon.html.BEAUTIFY\'>, \'BODY\': <class \'gluon.html.BODY\'>, \'BR\': <class \'gluon.html.BR\'>, \'BUTTON\': <class \'gluon.html.BUTTON\'>, \'CAT\': <class \'gluon.html.CAT\'>, \'CENTER\': <class \'gluon.html.CENTER\'>, ...}, layer=\'/home/dell/Downloads/web2py/applications/quiztopher/views/default/quiz.html\')'
+p84
+sS'func'
+p85
+S'restricted'
+p86
+sa(dp87
+g62
+S'/home/dell/Downloads/web2py/applications/quiztopher/views/default/quiz.html'
+p88
+sg64
+(dp89
+S'document'
+p90
+S'undefined'
+p91
+sS'options'
+p92
+g91
+ssg70
+I40
+sg71
+(dp93
+I32
+S'response.write(\'\\n     </a>\\n    </div>\\n    <div id="menu">\\n     \', escape=False)'
+p94
+sI33
+S"response.write(MENU(response.menu,_class='web2py-menu'))"
+p95
+sI34
+S'response.write(\'\\n    <script>\\n      jQuery(document).ready(function(){jQuery(\\\'ul.web2py-menu\\\').superfish({delay:400});});\\n    </script>\\n    </div>\\n   </div>\\n   <!--end header -->\\n   <!-- main -->\\n   <div id="main">\\n    <div id="content">\\n     \', escape=False)'
+p96
+sI35
+S"response.write('\\n', escape=False)"
+p97
+sI36
+S'response.write(BEAUTIFY(session.topic))'
+p98
+sI37
+S"response.write(' \\n\\n<br>\\n', escape=False)"
+p99
+sI38
+S'for row in var:'
+p100
+sI39
+S'    response.write(\'\\n<span id="SerialNumber">\', escape=False)'
+p101
+sI40
+S'    response.write(row.RollNo)'
+p102
+sI41
+S'    response.write(\'</span>\\n<span id="Question">\\n\', escape=False)'
+p103
+sI42
+S'    response.write(row.question)'
+p104
+sI43
+S'    response.write(\'\\n</span><br><br>\\n<input type="radio" name="option" value="opt1" /> <span id="Opt1"> \', escape=False)'
+p105
+sI44
+S'    response.write(row.opt1)'
+p106
+sI45
+S'    response.write(\'\\n</span>\\n<br><br>\\n<input type="radio" name="option" value="opt2" id="option2" /> <span id="Opt2"> \', escape=False)'
+p107
+sI46
+S'    response.write(row.opt2)'
+p108
+sI47
+S'    response.write(\'\\n</span>\\n<br><br>\\n<input type="radio" name="option" value="opt3" /> <span id="Opt3"> \', escape=False)'
+p109
+sI48
+S'    response.write(row.opt3)'
+p110
+sI49
+S'    response.write(\'\\n</span>\\n<br><br>\\n<input type="radio" name="option" value="opt4" /> <span id="Opt4"> \', escape=False)'
+p111
+sI50
+S'    response.write(row.opt4)'
+p112
+sI31
+S'response.write(T("Quiztopher"))'
+p113
+ssg83
+S'()'
+p114
+sg85
+S'<module>'
+p115
+sasS'pyver'
+p116
+S'Python 2.7.4: /usr/bin/python (prefix: /usr)'
+p117
+sS'session'
+p118
+g57
+(S's\x1f\x13\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top;">ansDict</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">10102</td><td style="vertical-align:top;">:</td><td><div>false</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">10104</td><td style="vertical-align:top;">:</td><td><div>opt4</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">auth</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">expiration</td><td style="vertical-align:top;">:</td><td><div>3600</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">hmac_key</td><td style="vertical-align:top;">:</td><td><div>497ef4fd-0da6-426f-9cca-549bcc5bbee7</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">last_visit</td><td style="vertical-align:top;">:</td><td><div>datetime.datetime(2014, 4, 23, 13, 23, 11, 986035)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">remember</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">user</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">date_of_birth</td><td style="vertical-align:top;">:</td><td><div>datetime.date(1995, 11, 2)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">email</td><td style="vertical-align:top;">:</td><td><div>mailmesharvil@rediffmail.com</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">first_name</td><td style="vertical-align:top;">:</td><td><div>Sharvil</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">gender</td><td style="vertical-align:top;">:</td><td><div>Male</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">id</td><td style="vertical-align:top;">:</td><td><div>3L</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">image</td><td style="vertical-align:top;">:</td><td><div>auth_user.image.949f72e391c46331.696d6167652e6a7067.jpg</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">last_name</td><td style="vertical-align:top;">:</td><td><div>Katariya</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">registration_id</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">registration_key</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">reset_password_key</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">username</td><td style="vertical-align:top;">:</td><td><div>sash</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">user_groups</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">3</td><td style="vertical-align:top;">:</td><td><div>user_3</div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cat</td><td style="vertical-align:top;">:</td><td><div>1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">correctNo</td><td style="vertical-align:top;">:</td><td><div>0</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">counter</td><td style="vertical-align:top;">:</td><td><div>10101</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">first</td><td style="vertical-align:top;">:</td><td><div>10101</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">flash</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">last_orderby</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">last_query</td><td style="vertical-align:top;">:</td><td><div>db.questions.id&gt;0</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">notAttempted</td><td style="vertical-align:top;">:</td><td><div>0</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">quesNo</td><td style="vertical-align:top;">:</td><td><div>10101</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">score</td><td style="vertical-align:top;">:</td><td><div>0</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">subCatNumber</td><td style="vertical-align:top;">:</td><td><div>101</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">topic</td><td style="vertical-align:top;">:</td><td><div>1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wrongNo</td><td style="vertical-align:top;">:</td><td><div>0</div></td></tr></table></div>'
+tRp119
+sS'etype'
+p120
+S"<type 'exceptions.AttributeError'>"
+p121
+sS'date'
+p122
+S'Wed Apr 23 13:27:14 2014'
+p123
+sS'response'
+p124
+g57
+(S'sw!\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top;">body</td><td style="vertical-align:top;">:</td><td><div>&lt;cStringIO.StringO object at 0x7f892c6f3810&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cookies</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">session_id_quiztopher</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-985b5700-7961-45b0-9fc6-72c846589738<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div>/</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">delimiters</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>{{</div></td></tr><tr><td><div>}}</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">files</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>/quiztopher/static/js/jquery.js</div></td></tr><tr><td><div>/quiztopher/static/css/calendar.css</div></td></tr><tr><td><div>/quiztopher/static/js/calendar.js</div></td></tr><tr><td><div>/quiztopher/static/js/web2py.js</div></td></tr><tr><td><div>/quiztopher/static/plugin_layouts/layouts/RedCity/style.css</div></td></tr><tr><td><div>/quiztopher/static/plugin_layouts/superfish.js</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">flash</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">generic_patterns</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>*</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">google_analytics_id</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">headers</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">X-Powered-By</td><td style="vertical-align:top;">:</td><td><div>web2py</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">logo</td><td style="vertical-align:top;">:</td><td><div><a class="brand" href="http://www.web2py.com/"><b>web<span>2</span>py</b>&trade;&nbsp;</a></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">menu</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div><table><tr><td><div>Home</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/quiztopher/default/index</div></td></tr><tr><td><div><table></table></div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Quiz</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/quiztopher/default/quizTopic</div></td></tr><tr><td><div><table></table></div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Games</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/quiztopher/default/game</div></td></tr><tr><td><div><table></table></div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>About</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/quiztopher/default/about</div></td></tr><tr><td><div><table></table></div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Contact</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/quiztopher/default/contact</div></td></tr><tr><td><div><table></table></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">meta</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">author</td><td style="vertical-align:top;">:</td><td><div>Sharvil Katariya</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">description</td><td style="vertical-align:top;">:</td><td><div>Quiztopher</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">generator</td><td style="vertical-align:top;">:</td><td><div>Web2py Web Framework</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">keywords</td><td style="vertical-align:top;">:</td><td><div>web2py, python, framework</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">models_to_run</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>^\\w+\\.py$</div></td></tr><tr><td><div>^default/\\w+\\.py$</div></td></tr><tr><td><div>^default/quiz/\\w+\\.py$</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">postprocessing</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_client</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_cookie_compression_level</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_cookie_expires</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_cookie_key</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_data_name</td><td style="vertical-align:top;">:</td><td><div>session_data_quiztopher</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_file</td><td style="vertical-align:top;">:</td><td><div>&lt;open file &#x27;/home/dell/Downloads/web2py/applications/quiztopher/sessions/127.0.0.1-985b5700-7961-45b0-9fc6-72c846589738&#x27;, mode &#x27;rb+&#x27; at 0x7f89446b61e0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_filename</td><td style="vertical-align:top;">:</td><td><div>/home/dell/Downloads/web2py/applications/quiztopher/sessions/127.0.0.1-985b5700-7961-45b0-9fc6-72c846589738</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_hash</td><td style="vertical-align:top;">:</td><td><div>0ffa9a3d176764ffa1e181663aa7f2f7</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-985b5700-7961-45b0-9fc6-72c846589738</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id_name</td><td style="vertical-align:top;">:</td><td><div>session_id_quiztopher</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_locked</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_masterapp</td><td style="vertical-align:top;">:</td><td><div>quiztopher</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_new</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_storage_type</td><td style="vertical-align:top;">:</td><td><div>file</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">status</td><td style="vertical-align:top;">:</td><td><div>200</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">subtitle</td><td style="vertical-align:top;">:</td><td><div>A Basic Web And Fun App</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">title</td><td style="vertical-align:top;">:</td><td><div>Quiztopher</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">view</td><td style="vertical-align:top;">:</td><td><div>default/quiz.html</div></td></tr></table></div>'
+tRp125
+sS'locals'
+p126
+(dp127
+S'Service'
+p128
+S"<class 'gluon.tools.Service'>"
+p129
+sS'OBJECT'
+p130
+S"<class 'gluon.html.OBJECT'>"
+p131
+sS'SQLDB'
+p132
+S"<class 'gluon.dal.DAL'>"
+p133
+sg118
+S"<Storage {'flash': None, 'correctNo': 0, 'wrongN...2-7e5e-47f0-a166-eb7bcaa2a0ad'], 'first': 10101}>"
+p134
+sS'LINK'
+p135
+S"<class 'gluon.html.LINK'>"
+p136
+sS'BR'
+p137
+S"<class 'gluon.html.BR'>"
+p138
+sS'local_import'
+p139
+S'<function <lambda>>'
+p140
+sS'OPTGROUP'
+p141
+S"<class 'gluon.html.OPTGROUP'>"
+p142
+sS'__package__'
+p143
+S'None'
+p144
+sS'row'
+p145
+S"'counter'"
+p146
+sS'PRE'
+p147
+S"<class 'gluon.html.PRE'>"
+p148
+sS'IS_INT_IN_RANGE'
+p149
+S"<class 'gluon.validators.IS_INT_IN_RANGE'>"
+p150
+sS'IS_LOWER'
+p151
+S"<class 'gluon.validators.IS_LOWER'>"
+p152
+sS'IS_STRONG'
+p153
+S"<class 'gluon.validators.IS_STRONG'>"
+p154
+sS'cache'
+p155
+S'<gluon.cache.Cache object>'
+p156
+sS'IS_IN_DB'
+p157
+S"<class 'gluon.validators.IS_IN_DB'>"
+p158
+sS'TAG'
+p159
+S'<gluon.html.__TAG__ object>'
+p160
+sS'SQLField'
+p161
+S"<class 'gluon.dal.Field'>"
+p162
+sS'mail'
+p163
+S'<gluon.tools.Mail object>'
+p164
+sS'BODY'
+p165
+S"<class 'gluon.html.BODY'>"
+p166
+sS'IS_DATE_IN_RANGE'
+p167
+S"<class 'gluon.validators.IS_DATE_IN_RANGE'>"
+p168
+sS'IFRAME'
+p169
+S"<class 'gluon.html.IFRAME'>"
+p170
+sS'URL'
+p171
+S'<function URL>'
+p172
+sS'__file__'
+p173
+S"'/home/dell/Downloads/web2py/applications/quiztopher/views/default/quiz.html'"
+p174
+sS'db'
+p175
+S'<DAL uri="sqlite://storage.sqlite">'
+p176
+sS'auth'
+p177
+S'<gluon.tools.Auth object>'
+p178
+sS'P'
+S"<class 'gluon.html.P'>"
+p179
+sS'TFOOT'
+p180
+S"<class 'gluon.html.TFOOT'>"
+p181
+sS'XHTML'
+p182
+S"<class 'gluon.html.XHTML'>"
+p183
+sS'ON'
+p184
+S'True'
+p185
+sS'OL'
+p186
+S"<class 'gluon.html.OL'>"
+p187
+sS'TEXTAREA'
+p188
+S"<class 'gluon.html.TEXTAREA'>"
+p189
+sS'MENU'
+p190
+S"<class 'gluon.html.MENU'>"
+p191
+sS'IS_IMAGE'
+p192
+S"<class 'gluon.validators.IS_IMAGE'>"
+p193
+sS'DIV'
+p194
+S"<class 'gluon.html.DIV'>"
+p195
+sS'EM'
+p196
+S"<class 'gluon.html.EM'>"
+p197
+sS'CODE'
+p198
+S"<class 'gluon.html.CODE'>"
+p199
+sS'HTTP'
+p200
+S"<class 'gluon.http.HTTP'>"
+p201
+sS'HR'
+p202
+S"<class 'gluon.html.HR'>"
+p203
+sS'IS_DATETIME'
+p204
+S"<class 'gluon.validators.IS_DATETIME'>"
+p205
+sS'STYLE'
+p206
+S"<class 'gluon.html.STYLE'>"
+p207
+sS'LABEL'
+p208
+S"<class 'gluon.html.LABEL'>"
+p209
+sS'CLEANUP'
+p210
+S"<class 'gluon.validators.CLEANUP'>"
+p211
+sS'plugins'
+p212
+S'<gluon.tools.PluginManager object>'
+p213
+sS'SELECT'
+p214
+S"<class 'gluon.html.SELECT'>"
+p215
+sS'use_janrain'
+p216
+S'<function use_janrain>'
+p217
+sS'CENTER'
+p218
+S"<class 'gluon.html.CENTER'>"
+p219
+sS'prettydate'
+p220
+S'<function prettydate>'
+p221
+sS'custom_auth_table'
+p222
+S'<Table auth_user (id,first_name,last_name,userna...stration_key,reset_password_key,registration_id)>'
+p223
+sS'Crud'
+p224
+S"<class 'gluon.tools.Crud'>"
+p225
+sS'Auth'
+p226
+S"<class 'gluon.tools.Auth'>"
+p227
+sS'DEVELOPMENT_MENU'
+p228
+g185
+sS'__builtins__'
+p229
+S"{'ArithmeticError': <type 'exceptions.ArithmeticError'>, 'AssertionError': <type 'exceptions.AssertionError'>, 'AttributeError': <type 'exceptions.AttributeError'>, 'BaseException': <type 'exceptions.BaseException'>, 'BufferError': <type 'exceptions.BufferError'>, 'BytesWarning': <type 'exceptions.BytesWarning'>, 'DeprecationWarning': <type 'exceptions.DeprecationWarning'>, 'EOFError': <type 'exceptions.EOFError'>, 'Ellipsis': Ellipsis, 'EnvironmentError': <type 'exceptions.EnvironmentError'>, ...}"
+p230
+sS'HTML'
+p231
+S"<class 'gluon.html.HTML'>"
+p232
+sS'SQLFORM'
+p233
+S"<class 'gluon.sqlhtml.SQLFORM'>"
+p234
+sS'LOAD'
+p235
+S'<function LOAD>'
+p236
+sS'redirect'
+p237
+S'<function redirect>'
+p238
+sS'FIELDSET'
+p239
+S"<class 'gluon.html.FIELDSET'>"
+p240
+sS'IS_EQUAL_TO'
+p241
+S"<class 'gluon.validators.IS_EQUAL_TO'>"
+p242
+sS'embed64'
+p243
+S'<function embed64>'
+p244
+sS'IS_LIST_OF'
+p245
+S"<class 'gluon.validators.IS_LIST_OF'>"
+p246
+sS'INPUT'
+p247
+S"<class 'gluon.html.INPUT'>"
+p248
+sS'EMBED'
+p249
+S"<class 'gluon.html.EMBED'>"
+p250
+sS'_'
+S'<function _>'
+p251
+sS'H2'
+p252
+S"<class 'gluon.html.H2'>"
+p253
+sS'H3'
+p254
+S"<class 'gluon.html.H3'>"
+p255
+sS'BUTTON'
+p256
+S"<class 'gluon.html.BUTTON'>"
+p257
+sS'H1'
+p258
+S"<class 'gluon.html.H1'>"
+p259
+sS'H6'
+p260
+S"<class 'gluon.html.H6'>"
+p261
+sS'H4'
+p262
+S"<class 'gluon.html.H4'>"
+p263
+sS'H5'
+p264
+S"<class 'gluon.html.H5'>"
+p265
+sS'UL'
+p266
+S"<class 'gluon.html.UL'>"
+p267
+sS'IS_UPPER'
+p268
+S"<class 'gluon.validators.IS_UPPER'>"
+p269
+sS'xmlescape'
+p270
+S'<function xmlescape>'
+p271
+sS'IS_TIME'
+p272
+S"<class 'gluon.validators.IS_TIME'>"
+p273
+sS'OPTION'
+p274
+S"<class 'gluon.html.OPTION'>"
+p275
+sS'TITLE'
+p276
+S"<class 'gluon.html.TITLE'>"
+p277
+sS'CRYPT'
+p278
+S"<class 'gluon.validators.CRYPT'>"
+p279
+sS'IS_EMPTY_OR'
+p280
+S"<class 'gluon.validators.IS_EMPTY_OR'>"
+p281
+sS'MARKMIN'
+p282
+S"<class 'gluon.html.MARKMIN'>"
+p283
+sS'__name__'
+p284
+S"'__restricted__'"
+p285
+sS'STRONG'
+p286
+S"<class 'gluon.html.STRONG'>"
+p287
+sS'COL'
+p288
+S"<class 'gluon.html.COL'>"
+p289
+sS'service'
+p290
+S'<gluon.tools.Service object>'
+p291
+sS'SCRIPT'
+p292
+S"<class 'gluon.html.SCRIPT'>"
+p293
+sS'var'
+p294
+S"<Row {'counter': {'subcategory': 101L, 'startptr...', 'id': 3L, 'opt3': 'Kolkata', 'opt2': 'Agra'}}>"
+p295
+sS'TABLE'
+p296
+S"<class 'gluon.html.TABLE'>"
+p297
+sS'IS_IPV4'
+p298
+S"<class 'gluon.validators.IS_IPV4'>"
+p299
+sS'IS_LENGTH'
+p300
+S"<class 'gluon.validators.IS_LENGTH'>"
+p301
+sS'IS_IPV6'
+p302
+S"<class 'gluon.validators.IS_IPV6'>"
+p303
+sS'XML'
+p304
+S"<class 'gluon.html.XML'>"
+p305
+sS'B'
+S"<class 'gluon.html.B'>"
+p306
+sS'IMG'
+p307
+S"<class 'gluon.html.IMG'>"
+p308
+sS'SQLTABLE'
+p309
+S"<class 'gluon.sqlhtml.SQLTABLE'>"
+p310
+sS'IS_MATCH'
+p311
+S"<class 'gluon.validators.IS_MATCH'>"
+p312
+sS'IS_ALPHANUMERIC'
+p313
+S"<class 'gluon.validators.IS_ALPHANUMERIC'>"
+p314
+sS'SPAN'
+p315
+S"<class 'gluon.html.SPAN'>"
+p316
+sS'IS_JSON'
+p317
+S"<class 'gluon.validators.IS_JSON'>"
+p318
+sS'IS_IPADDRESS'
+p319
+S"<class 'gluon.validators.IS_IPADDRESS'>"
+p320
+sS'IS_SLUG'
+p321
+S"<class 'gluon.validators.IS_SLUG'>"
+p322
+sS'BEAUTIFY'
+p323
+S"<class 'gluon.html.BEAUTIFY'>"
+p324
+sS'META'
+p325
+S"<class 'gluon.html.META'>"
+p326
+sS'IS_DATE'
+p327
+S"<class 'gluon.validators.IS_DATE'>"
+p328
+sS'IS_EMAIL'
+p329
+S"<class 'gluon.validators.IS_EMAIL'>"
+p330
+sS'IS_NOT_EMPTY'
+p331
+S"<class 'gluon.validators.IS_NOT_EMPTY'>"
+p332
+sS'IS_FLOAT_IN_RANGE'
+p333
+S"<class 'gluon.validators.IS_FLOAT_IN_RANGE'>"
+p334
+sS'TBODY'
+p335
+S"<class 'gluon.html.TBODY'>"
+p336
+sS'CAT'
+p337
+S"<class 'gluon.html.CAT'>"
+p338
+sS'Field'
+p339
+S"<class 'gluon.dal.Field'>"
+p340
+sS'IS_LIST_OF_EMAILS'
+p341
+S"<class 'gluon.validators.IS_LIST_OF_EMAILS'>"
+p342
+sS'auth_table'
+p343
+S'<Table auth_user (id,first_name,last_name,userna...stration_key,reset_password_key,registration_id)>'
+p344
+sS'LEGEND'
+p345
+S"<class 'gluon.html.LEGEND'>"
+p346
+sS'COLGROUP'
+p347
+S"<class 'gluon.html.COLGROUP'>"
+p348
+sS'DAL'
+p349
+S"<class 'gluon.dal.DAL'>"
+p350
+sS'TT'
+p351
+S"<class 'gluon.html.TT'>"
+p352
+sS'TR'
+p353
+S"<class 'gluon.html.TR'>"
+p354
+sS'LI'
+p355
+S"<class 'gluon.html.LI'>"
+p356
+sS'TH'
+p357
+S"<class 'gluon.html.TH'>"
+p358
+sS'TD'
+p359
+S"<class 'gluon.html.TD'>"
+p360
+sS'PluginManager'
+p361
+S"<class 'gluon.tools.PluginManager'>"
+p362
+sS'IS_URL'
+p363
+S"<class 'gluon.validators.IS_URL'>"
+p364
+sS'A'
+S"<class 'gluon.html.A'>"
+p365
+sS'HEAD'
+p366
+S"<class 'gluon.html.HEAD'>"
+p367
+sS'IS_DATETIME_IN_RANGE'
+p368
+S"<class 'gluon.validators.IS_DATETIME_IN_RANGE'>"
+p369
+sS'FORM'
+p370
+S"<class 'gluon.html.FORM'>"
+p371
+sS'I'
+S"<class 'gluon.html.I'>"
+p372
+sS'crud'
+p373
+S'<gluon.tools.Crud object>'
+p374
+sS'IS_NOT_IN_DB'
+p375
+S"<class 'gluon.validators.IS_NOT_IN_DB'>"
+p376
+sg124
+S"<Storage {'body': <cStringIO.StringO object at 0...at 0x7f89446c52a8>, 'view': 'default/quiz.html'}>"
+p377
+sS'THEAD'
+p378
+S"<class 'gluon.html.THEAD'>"
+p379
+sS'ANY_OF'
+p380
+S"<class 'gluon.validators.ANY_OF'>"
+p381
+sS'IS_NULL_OR'
+p382
+S"<class 'gluon.validators.IS_EMPTY_OR'>"
+p383
+sg56
+S"<Storage {'_vars': <Storage {}>, 'function': 'qu...dell/Downloads/web2py/applications/quiztopher/'}>"
+p384
+sS'IS_EXPR'
+p385
+S"<class 'gluon.validators.IS_EXPR'>"
+p386
+sS'T'
+S'<gluon.languages.translator object>'
+p387
+sS'IS_IN_SET'
+p388
+S"<class 'gluon.validators.IS_IN_SET'>"
+p389
+sS'IS_UPLOAD_FILENAME'
+p390
+S"<class 'gluon.validators.IS_UPLOAD_FILENAME'>"
+p391
+sS'IS_DECIMAL_IN_RANGE'
+p392
+S"<class 'gluon.validators.IS_DECIMAL_IN_RANGE'>"
+p393
+sssS'traceback'
+p394
+S'Traceback (most recent call last):\n  File "/home/dell/Downloads/web2py/gluon/restricted.py", line 217, in restricted\n    exec ccode in environment\n  File "/home/dell/Downloads/web2py/applications/quiztopher/views/default/quiz.html", line 40, in <module>\n    options = document.getElementsByName(\'option\');\nAttributeError: \'str\' object has no attribute \'RollNo\'\n'
+p395
+s.

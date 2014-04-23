@@ -1,0 +1,16 @@
+body {
+    background-color:#330033;
+}
+#container {
+    text-align: center;
+}
+#simpleCanvas {
+    display:inline;
+    position: relative;
+    top: 20%;
+    left: 0%;
+    border:2px solid blue;
+    width:600px;
+    height:450px;
+    background-color: #C0C0C0;
+}
