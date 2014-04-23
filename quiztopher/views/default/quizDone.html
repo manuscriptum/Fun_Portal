@@ -21,8 +21,7 @@ body
 
 <script language="javascript" type="text/javascript">  
 window.onbeforeunload = function () {
-   window.history.go(0);
-   //location.replace('http://www.google.com');
+   window.location.reload(true); 
    return "This session is expired and the history altered.";
 }
 </script>
