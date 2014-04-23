@@ -1,0 +1,53 @@
+{{extend 'layout.html'}}
+
+
+<link href='http://fonts.googleapis.com/css?family=Nothing+You+Could+Do' rel='stylesheet' type='text/css'>
+
+<style>
+@import url(http://fonts.googleapis.com/css?family=Fredericka+the+Great);
+body
+{
+	color: black;
+	color: rgba(0,0,0,0.8);
+	font-family: 'Nothing You Could Do', cursive;
+	font-weight: 700;
+	font-size: 20px;
+	text-align: left;
+	padding-left: 30px;
+}
+
+</style>
+
+{{=table}}
+<script src="{{=URL('static','js/RGraph.common.core.js')}}"></script>
+<script src="{{=URL('static','js/RGraph.common.dynamic.js')}}"></script>
+<script src="{{=URL('static','js/RGraph.common.key.js')}}"></script>
+<script src="{{=URL('static','js/RGraph.common.tooltips.js')}}"></script>
+<script src="{{=URL('static','js/RGraph.drawing.rect.js')}}"></script>
+<script src="{{=URL('static','js/RGraph.line.js')}}"></script>
+<script src="{{=URL('static','js/RGraph.pie.js')}}"></script>
+<script src="{{=URL('static','js/excanvas.js')}}"></script>
+
+<canvas id="average" width="450" height="350" style="border: 0px solid gray">[No canvas support]</canvas>
+
+<script>
+window.onload = function ()
+{
+	var pie = new RGraph.Pie('average', [ {{=correct}}, 
+		{{=wrong}},
+		{{=unattempted}}, 
+		{{=avg_score}}] )
+	.Set('title', 'Average User Stats')
+	.Set('key', ['{{=T('Correct Answer') }}', '{{=T('Wrong Answer') }}', '{{=T('Unattempted') }}', '{{=T('Score') }}' ] )
+	.Set('key.colors', ['red', '#ccc', '#0f0', '#00f'] )
+	.Set('key.interactive', true)
+	.Set('key.rounded', false)
+	.Set('radius', 70)
+	.Set('tooltips', ['{{=T('Correct Answer(s)') }} : {{=correct}}', 
+		'{{=T('Wrong Answer(s)') }} : {{=wrong}}', 
+		'{{=T('Unattempted') }} : {{=unattempted}}', 
+		'{{=T('Score') }} : {{=avg_score}}' ] )
+	.Draw();
+}
+</script>
+
