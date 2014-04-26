@@ -1,0 +1,189 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+	<style type="text/css"> 
+	div #container
+	{
+		width: 900px;
+		height: 600px;
+		margin: 0 auto;
+		display:inline-block;
+		position:relative;
+		text-align: center;
+		position: relative;
+	}
+	div#memory_board
+	{ 	
+		background:#FF6666; 
+		border:#999 1px solid; 
+		width:880px;
+		height:580px; 
+		padding:24px; 
+		margin:20px auto;
+		vertical-align: middle;
+		border-radius:5%;
+	} 
+	div#memory_board > div
+	{ 
+		border:#000 1px solid;
+		display: inline-block;
+		width:88px;
+		height:88px;
+		float:left;
+		margin:8px;
+		padding:20px;
+		border-radius:50%;
+		cursor:pointer;
+		text-align:center;
+		{{backimage = URL('static','images/country.gif')}}
+		background: url('{{=backimage}}') no-repeat;
+		background-size: 100%; 
+	} 
+	.selected
+	{
+		width: 88px;
+		height: 88px;
+		display: table-cell;
+		cursor:pointer;
+		vertical-align:middle;
+		text-align:center;
+		font: bold Impact,Charcoal,Serif;
+		font-size: 25px;
+		color: #00ff00;
+		line-height: 88px;
+		background: #EEEEEE no-repeat fixed center;
+	}
+	#timer
+	{
+		font-size: 40px;
+	}
+	#container
+	{
+		text-align: center;
+	}
+	</style> 
+	<link href='http://fonts.googleapis.com/css?family=Nothing+You+Could+Do' rel='stylesheet' type='text/css'>
+	<style>
+	@import url(http://fonts.googleapis.com/css?family=Fredericka+the+Great);
+	body
+	{
+
+		color: black;
+		color: rgba(0,0,0,0.8);
+		font-family: 'Nothing You Could Do', cursive;
+		font-weight: 700;
+		font-size: 20px;
+		text-align: left;
+		padding-left: 30px;
+	}
+	</style>
+
+	<script type="text/javascript"> 
+	var mem_arr = ['Austria','Austria','Brazil','Brazil','Canada','Canada','China','China','Egypt','Egypt','France','France','Finland','Finland','Russia','Russia','India','India','Kuwait','Kuwait', 'Spain','Spain','USA','USA']; 
+	var mem_val = [];
+	var mem_tile_id = [];
+	var tiles_flipped = 0;
+	var no_of_times_flipped=0;
+	Array.prototype.tile_shuffle = function(){
+		var i = this.length, j, temp; 
+		while(--i > 0)
+		{ 
+			j = Math.floor(Math.random() * (i+1));
+			temp = this[j];
+			this[j] = this[i]; 
+			this[i] = temp; 
+		} 
+	} 
+	var count=setInterval(timer,1000)
+	function timer()
+	{
+		count += 1;
+		document.getElementById('timer').innerHTML = count;
+	}
+	function newBoard(){ 
+		tiles_flipped = 0; 
+		var output = ''; 
+		score = 0;
+		count=0;
+		mem_arr.tile_shuffle();
+		for(var i = 0; i < mem_arr.length; i++){ 
+			output += '<div id="tile_'+i+'" onclick="fliptile(this,\''+mem_arr[i]+'\')"></div>'; 
+		} 
+		document.getElementById('memory_board').innerHTML = output;
+	}
+	function fliptile(tile,val)
+	{ 
+		if(tile.innerHTML == "" && mem_val.length < 2)
+		{ 
+			tile.setAttribute("class","selected");
+			tile.style.background = '#0066CC';
+			tile.innerHTML = val;
+			if(mem_val.length == 0)
+			{ 
+				mem_val.push(val); 
+				mem_tile_id.push(tile.id); 
+			} 
+			else if(mem_val.length == 1)
+			{ 
+				mem_val.push(val);
+				mem_tile_id.push(tile.id);
+				score+=2;
+				if(mem_val[0] == mem_val[1])
+				{   
+				    	tiles_flipped += 2; // Clear both arrays 
+				    	mem_val = []; 
+				    	mem_tile_id = []; 
+				    	// Check to see if the whole board is cleared 
+				    	if(tiles_flipped == mem_arr.length)
+				    	{ 
+				    		var continuos=confirm('You finished the game '+ count+' seconds with '+score+' tile flips. Do you want to play another game?');
+				    		if (continuos==true)
+				    		{
+				    			document.getElementById('memory_board').innerHTML = ""; 
+				    			newBoard(); 
+				    		}
+				    		clearInterval(count);
+				    	} 
+				    }
+				    else 
+				    { 
+				    	function flipback()
+				    	{ 
+				    	// Flip the 2 tiles back over 
+				    	var tile_1 = document.getElementById(mem_tile_id[0]); 
+				    	var tile_2 = document.getElementById(mem_tile_id[1]);
+				    	tile_1.style.background = 'url("{{=URL('static','images/country.gif')}}") no-repeat';
+				    	tile_1.style.backgroundSize = "100%"; 
+				    	tile_1.innerHTML = "";
+				    	tile_1.style.display="table-cell";
+				    	tile_1.style.textAlign="center";
+				    	tile_1.style.verticalAlign="middle";
+				    	tile_2.style.background = 'url("{{=URL('static','images/country.gif')}}") no-repeat';
+				    	tile_2.style.backgroundSize = "100%"; 
+				    	tile_2.innerHTML = ""; 
+				    	mem_val = [];
+				    	mem_tile_id = []; 
+				    } 
+				    setTimeout(flipback, 500); 
+				}
+			} 
+		} 
+	} 
+	</script>
+	<title>
+		Memory Game
+	</title> 
+</head> 
+<body>
+	<div id="container">
+		<h1>
+			Memory Game
+			<br>
+			Do You think you know all the countries well? Lets findout!!:)
+		</h1>
+		<div id="timer">0</div>
+		<div id="memory_board"></div> 
+		<script>newBoard();</script>
+	</div> 
+</body> 
+</html>

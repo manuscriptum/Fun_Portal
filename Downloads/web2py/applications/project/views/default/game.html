@@ -1,0 +1,51 @@
+{{extend 'layout.html'}}
+
+	<link href='http://fonts.googleapis.com/css?family=Nothing+You+Could+Do' rel='stylesheet' type='text/css'>
+
+<style>
+@import url(http://fonts.googleapis.com/css?family=Fredericka+the+Great);
+body
+{
+
+	color: black;
+	color: rgba(0,0,0,0.8);
+  	font-family: 'Nothing You Could Do', cursive;
+  	font-weight: 700;
+  	font-size: 20px;
+  	text-align: left;
+  	padding-left: 30px;
+}
+
+
+</style>
+
+<head>
+	<title>
+		Games
+	</title>
+	<script>
+	{{response.files.append(URL(r=request,c='static',f='css/game.css'))}}
+	{{include 'web2py_ajax.html'}}
+	</script>
+</head>
+<body>
+	<h2>Presenting To You The Games:</h2>
+	<br>
+	<ul>
+		<li> 
+			<h2>Dodge Ball Game</h2>
+			<br>
+		<a href="dodgeball.html">
+		<img src={{=URL('static','images/dodgeball.png')}} alt="Dodge The Ball Game">
+		</a>
+		</li>
+		<br>
+		<li> 
+			<h2>Memory Game </h2>
+			<br>
+		<a href="memorygame.html">
+		<img src={{=URL('static','images/memorygame.png')}} alt="Memory Game">
+		</a>
+		</li>
+	</ul>
+</body>

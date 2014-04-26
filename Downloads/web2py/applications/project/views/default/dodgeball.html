@@ -1,0 +1,44 @@
+<html>
+{{extend }}
+<script src="{{=URL('static','js/dodgeball.js')}}"></script>
+
+{{response.files.append(URL(r=request,c='static',f='css/dodgeball.css'))}}
+{{include 'web2py_ajax.html'}}
+
+<link href='http://fonts.googleapis.com/css?family=Nothing+You+Could+Do' rel='stylesheet' type='text/css'>
+
+<style>
+@import url(http://fonts.googleapis.com/css?family=Fredericka+the+Great);
+body
+{
+
+  color: black;
+  color: rgba(0,0,0,0.8);
+    font-family: 'Nothing You Could Do', cursive;
+    font-weight: 700;
+    font-size: 20px;
+    text-align: left;
+    padding-left: 30px;
+}
+</style><head>
+  <title>
+    Dodge Ball
+  </title>
+</head>
+<body>
+ <div id="container">
+  <h1 style="color:white;">Dodge Ball</h1>
+  <select id="difficulty">
+   <option value="4" selected="selected">Easy</option>
+   <option value="5" >Medium</option>
+   <option value="6">Hard</option>
+ </select>
+ <input type='button' name="play" id='select1' value="Play">
+ <input type='button' name="retry" id='ret' value="Retry" onClick="history.go(0)">
+ <br>
+ <canvas id="simpleCanvas">
+ </canvas>
+</div>  
+</body>
+</html>
+

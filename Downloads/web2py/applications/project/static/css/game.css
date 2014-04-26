@@ -1,0 +1,10 @@
+ul 
+{
+	list-style-type:square;
+	{{icon-image = URL('static','images/star.png')}}
+	list-style-image:url('{{=icon-image}}');
+}
+h2
+{
+	font-size: 25px;
+}

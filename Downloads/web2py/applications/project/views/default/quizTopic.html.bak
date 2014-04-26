@@ -1,0 +1,161 @@
+{{extend 'layout.html'}}
+
+<link href='http://fonts.googleapis.com/css?family=Nothing+You+Could+Do' rel='stylesheet' type='text/css'>
+
+<style>
+@import url(http://fonts.googleapis.com/css?family=Fredericka+the+Great);
+body
+{
+  color: black;
+  color: rgba(0,0,0,0.8);
+    font-family: 'Nothing You Could Do', cursive;
+    font-weight: 700;
+    font-size: 20px;
+    text-align: left;
+    padding-left: 30px;
+}
+
+</style>
+
+
+
+<link rel="stylesheet" href="http://www.the-art-of-web.com/css/rotating-cube/A._,Mco.DEPln0epyj.css.pagespeed.cf.DEPln0epyj.css" type="text/css">
+
+
+<div class="stage" style="width: 120px; height: 120px;position:absolute;top:440px;left:1070px;">
+<div class="cubespinner">
+<div class="face1"><div  style="font-size:30px;text-align:center;background-color:#000000;opacity:0.8;">{{=A('Quiz Arena', _href=URL("quiz", args=[]))}}</div></div>
+<div class="face2"><div  style="font-size:30px;text-align:center;background-color:#66FF33;opacity:0.8;">{{=A('Quiz Arena', _href=URL("quiz", args=[]))}}</div></div>
+<div class="face3"><div  style="font-size:30px;text-align:center;background-color:#990000;opacity:0.8;">{{=A('Quiz Arena', _href=URL("quiz", args=[]))}}</div></div>
+<div class="face4"><div  style="font-size:30px;text-align:center;background-color:#FFFF33;opacity:0.8;">{{=A('Quiz Arena', _href=URL("quiz", args=[]))}}</div></div>
+<div class="face5"><div  style="font-size:30px;text-align:center;background-color:#6633FF;opacity:0.8;">{{=A('Quiz Arena', _href=URL("quiz", args=[]))}}</div></div>
+<div class="face6"><div  style="font-size:30px;text-align:center;">{{=A('Quiz Arena', _href=URL("quiz", args=[]))}}</div></div>
+</div>
+</div>
+
+<script>
+
+var matched, browser;
+
+jQuery.uaMatch = function( ua ) {
+    ua = ua.toLowerCase();
+
+    var match = /(chrome)[ \/]([\w.]+)/.exec( ua ) ||
+        /(webkit)[ \/]([\w.]+)/.exec( ua ) ||
+        /(opera)(?:.*version|)[ \/]([\w.]+)/.exec( ua ) ||
+        /(msie) ([\w.]+)/.exec( ua ) ||
+        ua.indexOf("compatible") < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec( ua ) ||
+        [];
+
+    return {
+        browser: match[ 1 ] || "",
+        version: match[ 2 ] || "0"
+    };
+};
+
+matched = jQuery.uaMatch( navigator.userAgent );
+browser = {};
+
+if ( matched.browser ) {
+    browser[ matched.browser ] = true;
+    browser.version = matched.version;
+}
+
+// Chrome is Webkit, but Webkit is also Safari.
+if ( browser.chrome ) {
+    browser.webkit = true;
+} else if ( browser.webkit ) {
+    browser.safari = true;
+}
+
+jQuery.browser = browser;
+
+
+
+
+
+</script>
+
+
+
+<div  style="position:absolute;top:180px;left:35px;background-color:#9999FF;width:250px;height:50px;text-align:center;box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.5);border-radius:15px;"></div>
+<div style="position:absolute;top:195px;left:90px;">Select Topics</div><br><br><br>
+
+<div  class="subtop" style="position:absolute;top:380px;left:535px;background-color:#9999FF;width:250px;height:50px;text-align:center;box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.5);border-radius:15px;"></div>
+<div style="position:absolute;top:395px;left:590px;" class="subtop">Sub-Topics</div><br><br><br>
+
+
+
+{{for row in var:}}
+<input type="radio" onclick="RadioClick(this.value);" name="Category" value="{{=row.id}}" > {{=row.name}} <br><br>
+{{pass}}
+
+<ol id="subcat" style="position:absolute;top:400px;left:500px;">
+</ol>
+
+
+<div  style="position:absolute;top:330px;left:1000px;background-color:#000000;width:250px;height:50px;text-align:center;box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.5);border-radius:15px;"></div>
+<div  style="position:absolute;top:345px;left:1030px;text-align:center;">{{=A('Go To Quiz Arena', _href=URL("quiz", args=[]))}}</div>
+
+
+<!--<body>
+
+<form action="quizTopic" method="">
+<input type="radio" name="topic" value="Football">Sports<br><br>
+<input type="radio" name="topic" value="International">GK<br><br>
+<input type="submit" name="submit"/>
+</form>
+
+</body>-->
+
+
+
+
+<script>
+jQuery(".subtop").hide();
+//  allCategories = document.getElementsByName('Category');
+ // var value = false;
+ // for ( var i = 0; i < allCategories.length; i++)
+ // {
+ //     allCategories[i].onclick = function(){
+    var val = false;
+        function RadioClick(checkedValue){
+            jQuery(".subtop").show();
+            console.log(checkedValue);
+             val = checkedValue;
+            ajax('{{=URL("cats")}}'+'?val=' + val, [] ,'target');
+         
+         var xmlhttp=new XMLHttpRequest();
+xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    { 
+        jsn = JSON.parse(xmlhttp.responseText);
+        var length = jsn.len
+        text = ""
+        
+        for ( var j = 1; j <= length; j++)
+        {
+        
+    text += "<li>" + '<input type="radio" id = "'+j+'" onclick="RadioClickTwo(this.value);"  name="subcategory" value = "'+j+'" >' + jsn[j] + "</li>"
+
+        }
+        document.getElementById("subcat").innerHTML = text
+      //  console.log(document.getElementById("inp2").value)
+    }
+}
+xmlhttp.open("GET","{{=URL('subcategory')}}",true);
+xmlhttp.send();
+
+
+}
+  var topic = false;
+  function RadioClickTwo(checkedValue){
+    topic = checkedValue;
+    ajax('{{=URL("Tempquiz")}}' + '?topic=' + topic,[],'target');
+  }  
+function goToQuiz(){
+  window.location.href = "quiz.html";
+}
+//}
+</script>
